@@ -6,13 +6,9 @@ const Random = require('./lib/random');
 
 
 
-const initialIds = {
-    't_customer': 1,
-    't_address': 32,
-    't_order': 100
-};
 
-const id = new ID(initialIds);
+
+const id = new ID();
 
 const valueStrategyParser = new ValueStrategyParser("'");
 
@@ -57,9 +53,19 @@ const dbStructure = {
     }
 };
 
-
-
 const insert = configure(new PostgreSQL(dbStructure, valueStrategyParser));
+
+
+
+const initialIds = {
+    't_customer': 1,
+    't_address': 32,
+    't_order': 100,
+    't_order_item': 150
+};
+
+id.setInitialIds(initialIds)
+
 
 insert('t_customer', { 'email': 'john120@gmail.com' })
 const address1 = insert('t_address', { 'street': 'delivery address' });
