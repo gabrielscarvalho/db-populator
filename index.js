@@ -1,6 +1,6 @@
 const configure = require('./lib/insert');
 const ID = require('./lib/id');
-
+const ValueStrategyParser = require('./lib/value-strategy-parser');
 const PostgreSQL = require('./db/postgresql');
 
 
@@ -12,12 +12,22 @@ const initialIds = {
 
 const id = new ID(initialIds);
 
+const valueStrategyParser = new ValueStrategyParser("'");
+
+
+
+valueStrategyParser.addParser('datetime', (val) => {
+
+    return '"DATETIME + ' + val + '"'
+});
+
 
 
 const dbStructure = {
     't_order': {
         'id': { 'type': 'int', val: id.getNext('t_order'), column: 'order_id_comprido' },
-        'order_code': { type: 'string' , val: 'FILL_ORDER_CODE'}
+        'order_code': { type: 'string' , val: 'FILL_ORDER_CODE'},
+        'creation_date': { type: 'datetime' , val: 'FILL_ORDER_CODE'}
     },
     't_consignment': {
         'id': { 'type': 'int', val: id.getNext('t_consignment')},
@@ -28,7 +38,7 @@ const dbStructure = {
 
 
 
-const insert = configure(new PostgreSQL(dbStructure));
+const insert = configure(new PostgreSQL(dbStructure, valueStrategyParser));
 
 const order1 = insert('t_order', {'order_code' : 'NEW_ORDER_CODE'})
 insert('t_consignment', { 'order_code' : order1.order_code})

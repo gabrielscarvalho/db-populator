@@ -1,8 +1,9 @@
 
 class PostgreSQL {
 
-    constructor(dbStructure) {
+    constructor(dbStructure, valueStrategyParser) {
         this.structure = dbStructure;
+        this.valueStrategyParser = valueStrategyParser;
         this.sqls = [];
     }
 
@@ -16,7 +17,11 @@ class PostgreSQL {
         for(const columnName in dataRow) {
             const column = dataRow[columnName];
             columnNames.push(columnName);
-            values.push(column.val);
+           
+           
+            const parsedValue = this.valueStrategyParser.apply(column.type,column.val);
+
+            values.push(parsedValue);
         }
 
 
