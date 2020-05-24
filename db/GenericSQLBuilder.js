@@ -1,7 +1,9 @@
+const ValueStrategyParser = require('./../lib/value-strategy-parser');
 
-class PostgreSQL {
 
-    constructor(dbStructure, valueStrategyParser) {
+class GenericSQLBuilder {
+
+    constructor(dbStructure, valueStrategyParser = new ValueStrategyParser('"')) {
         this.structure = dbStructure;
         this.valueStrategyParser = valueStrategyParser;
         this.sqls = [];
@@ -31,4 +33,4 @@ class PostgreSQL {
 }
 
 
-module.exports = PostgreSQL;
+module.exports = GenericSQLBuilder;

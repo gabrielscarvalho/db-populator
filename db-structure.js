@@ -1,7 +1,5 @@
 const Random = require('./lib/random');
 
-
-
 const dataGenerator = (id) => ({
 
     't_customer': {
