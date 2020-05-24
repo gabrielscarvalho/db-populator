@@ -1,0 +1,17 @@
+{
+  "name": "db-populator",
+  "version": "1.0.0",
+  "description": "helps you to easily creates inserts to whatever db you are using",
+  "main": "generator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "db",
+    "generator",
+    "insert",
+    "data"
+  ],
+  "author": "gabriel santos carvalho",
+  "license": "ISC"
+}
