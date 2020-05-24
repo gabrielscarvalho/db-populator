@@ -61,45 +61,47 @@ Notice that:
             }
        } 
 
-## Docs
+## Types
 
-## Basic Structure
+Types are pre-defined in order to populate the values into the insert. 
+You can see them at: [ValueStrategyParser](https://github.com/gabrielscarvalho/db-populator/blob/master/lib/value-strategy-parser.js "ValueStrategyParser")
 
-Here you can see the most clear scenario possible.
- - Choose Db parser
- - Configure Initial IDs
- - Creates your db structure
- - Creates your inserts
+At this moment, you can use:
 
-   
 
-        const  configure  =  require('./lib/insert');
-        const  ID  =  require('./lib/id');
-        const  PostgreSQL  =  require('./db/postgresql');
-        
-        const  initialIds  = {
-        't_customer':  0,
-        't_address':  0,
-        };
-        const  id  =  new  ID(initialIds);
-        
-        const dbStructure = {
-    	    't_customer': {
-    			'id': { 'type':  'int', val: id.getNext('t_customer') },
-    			'name': { type:  'string', val: Random.fromList(['John', 'Paul', 'Suzan', 'Mark']) },
-    		},
-    		't_address': {
-    			'id': { 'type':  'int', val: id.getNext('t_address') },
-    			'customer_id': { 'type':  'int', val: id.getCurrent('t_customer') },
-    		}
-    	};
-    	
-        const  insert  =  configure(new  PostgreSQL(dbStructure));
-        
-        insert('t_customer', { 'email':  'john120@gmail.com' })
-        const  address1  =  insert('t_address', { 'street':  'delivery address' });
-        insert.printSQLs();
+|type| effect on queries| 
+| ------------ | ------------ |
+|string| will put quotes at the variable|
+|int| will parse to int |
+|float| will parse to float|
+| datetime| return a string datetime 'YYYY-MM-DDTHH:mm:ss'|
+| date | return a string date 'YYYY-MM-DD'|
+|raw| will just add the value the same way it is. You can use this for functions, for example, NOW()|
 
+You are able to add new types if required.
+
+```javascript
+const id = require('db-populator/lib/id');
+const GenericSQLBuilder = require('db-populator/db/GenericSQLBuilder');
+const ValueStrategyParser = require('db-populator/lib/value-strategy-parser');
+
+const valueStategyParser = new ValueStrategyParser("'");// the unified quote symbol
+valueStrategyParser.addParser('my-timestamp', (val) =>  {
+  //format val as you wish
+  return formatedValToInsert;
+});
+
+configure(new GenericSQLBuilder(dbStructure(id, valueStrategyParser)));
+
+```
+
+## Basic Example
+
+Check the folder: [example](https://github.com/gabrielscarvalho/db-populator/tree/master/example "example")
+Inside of it, you will find 3 files:
+* db-structure: defines the db rules
+* insert: configure the insert 
+* index.js: run your command.
 
 ## insert(string tableName, object extraData)
 Creates a new sql insert and save it.
