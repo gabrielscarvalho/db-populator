@@ -44,4 +44,7 @@ const order1 = insert('t_order', {'order_code' : 'NEW_ORDER_CODE'})
 insert('t_consignment', { 'order_code' : order1.order_code})
 insert('t_consignment', 'blablabal')
 const order2 = insert('t_order', {'order_code' : 'NEW_ORDER_CODE_2'})
-insert('t_consignment', { 'order_code' : order2.order_code})
+insert('t_consignment', { 'order_code' : order2.order_code});
+
+
+insert.printAll();

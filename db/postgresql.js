@@ -18,18 +18,14 @@ class PostgreSQL {
             const column = dataRow[columnName];
             columnNames.push(columnName);
            
-           
             const parsedValue = this.valueStrategyParser.apply(column.type,column.val);
-
             values.push(parsedValue);
         }
 
 
         sql  = sql + "(" + columnNames.join(',') + ") ";
-
         sql  = sql + " VALUES (" + values.join(',') + ");";
 
-        console.log(sql);
         this.sqls.push(sql);
     }
 
