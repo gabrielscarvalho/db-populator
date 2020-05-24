@@ -22,8 +22,7 @@ class PostgreSQL {
             values.push(parsedValue);
         }
 
-
-        sql  = sql + "(" + columnNames.join(',') + ") ";
+        sql  = sql + "(" + columnNames.join(',') + ")";
         sql  = sql + " VALUES (" + values.join(',') + ");";
 
         this.sqls.push(sql);
