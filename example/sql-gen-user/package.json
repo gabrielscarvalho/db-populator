@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "db-populator": "^1.0.2"
+    "db-populator": "^1.0.7"
   }
 }
