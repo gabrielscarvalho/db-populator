@@ -1,7 +1,7 @@
-const configure = require('./lib/insert');
-const id = require('./lib/id');
 const GenericSQLBuilder = require('./db/GenericSQLBuilder');
 
+
+const Insertable = require('./lib/insertable');
 const dbStructure = require('./db-structure');
 
 const initialIds = {
@@ -12,9 +12,17 @@ const initialIds = {
 };
 
 
-id.setInitialIds(initialIds, (table, previousId) => {
-    // you are able to define the rules to choose next id to each table.
-    return --previousId;
-})
+const insert = new Insertable(dbStructure);
 
-module.exports = configure(new GenericSQLBuilder(dbStructure(id)));
+insert.setInitialIds(initialIds);
+insert.addParser('timestamp', (val) => ( 'TIMESTAMP '+ val))
+insert.setNextIdStrategy((tableName, previousId) => {
+    return --previousId;
+});
+
+insert.setQueryBuilder(GenericSQLBuilder);
+
+
+
+module.exports=insert;
+

@@ -3,7 +3,7 @@ const ValueStrategyParser = require('./../lib/value-strategy-parser');
 
 class GenericSQLBuilder {
 
-    constructor(dbStructure, valueStrategyParser = new ValueStrategyParser('"')) {
+    constructor(dbStructure, valueStrategyParser) {
         this.structure = dbStructure;
         this.valueStrategyParser = valueStrategyParser;
         this.sqls = [];
@@ -28,6 +28,7 @@ class GenericSQLBuilder {
         sql  = sql + " VALUES (" + values.join(',') + ");";
 
         this.sqls.push(sql);
+        return sql;
     }
 
 }
