@@ -25,6 +25,10 @@ After that, you can create your data, calling:
     insert.add('t_address', { 'street':  'delivery address' });
     insert.add('t_address', { 'street':  'invoice address', customer_id: customer.id });
     insert.printSQLs();
+    
+    //INSERT INTO t_customer(id,name,surname,email,birthDate,creation_date) VALUES (-1,'Suzan','Doe','john120@gmail.com','1975-05-11','2019-01-01T09:41:23');
+    //INSERT INTO t_address(id,customer_id,street,number,country,creation_date,is_main_address) VALUES (110,-1,'delivery address',139,'United States','2021-12-25T14:16:27',false);
+    //INSERT INTO t_address(id,customer_id,street,number,country,creation_date,is_main_address) VALUES (120,-1,'invoice address',74,'United States','2019-12-01T20:48:15',false);
 ```
 
 And that's all! It will return your inserts.
