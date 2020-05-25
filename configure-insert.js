@@ -1,4 +1,4 @@
-const GenericSQLBuilder = require('./db/GenericSQLBuilder');
+//const GenericSQLBuilder = require('./db/GenericSQLBuilder');
 
 
 const Insertable = require('./lib/insertable');
@@ -12,15 +12,23 @@ const initialIds = {
 };
 
 
-const insert = new Insertable(dbStructure);
+const insert = new Insertable(dbStructure, initialIds);
 
-insert.setInitialIds(initialIds);
-insert.addParser('timestamp', (val) => ( 'TIMESTAMP '+ val))
-insert.setNextIdStrategy((tableName, previousId) => {
+
+//Another way to set the initialIds
+//insert.setInitialIds(initialIds);
+
+//add new parsers or replace the actual
+//insert.addParser('my-special-type', (val) => (insert.parserWrapString('timestamp '+ val)))
+
+
+//set the next id strategy
+/*insert.setNextIdStrategy((tableName, previousId) => {
     return --previousId;
-});
+});*/
 
-insert.setQueryBuilder(GenericSQLBuilder);
+//add your own query builder.
+//insert.setQueryBuilder(GenericSQLBuilder);
 
 
 
