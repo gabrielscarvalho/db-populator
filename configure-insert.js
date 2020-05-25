@@ -19,7 +19,9 @@ const insert = new Insertable(dbStructure, initialIds);
 //insert.setInitialIds(initialIds);
 
 //add new parsers or replace the actual
-//insert.addParser('my-special-type', (val) => (insert.parserWrapString('timestamp '+ val)))
+insert.addParser('my-special-type', (val) => {
+    insert.addQuotes('timestamp '+ val)
+});
 
 
 //set the next id strategy

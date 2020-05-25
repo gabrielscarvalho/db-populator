@@ -16,3 +16,9 @@ insert.add('t_order_item', {})
 
 //insert.printData();
 insert.printSQLs();
+
+//all data created
+//console.log(insert.objects));
+
+//more detailed data:
+//console.log(insert.completeObjects));
