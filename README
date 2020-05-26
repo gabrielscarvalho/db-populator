@@ -1,4 +1,5 @@
 
+
 # DB Populator
 Make it easy to populate your test database, creating inserts based on a simple json:
 ```javascript
@@ -30,6 +31,49 @@ After that, you can create your data, calling:
     //INSERT INTO t_address(id,customer_id,street,number,country,creation_date,is_main_address) VALUES (110,-1,'delivery address',139,'United States','2021-12-25T14:16:27',false);
     //INSERT INTO t_address(id,customer_id,street,number,country,creation_date,is_main_address) VALUES (120,-1,'invoice address',74,'United States','2019-12-01T20:48:15',false);
 ```
+
+## Basic Example
+
+Check the folder: [example](https://github.com/gabrielscarvalho/db-populator/tree/master/example "example")
+Inside of it, you will find 3 files:
+* db-structure: defines the db rules
+* insert-configure	: configure the insert 
+* index.js: run your command.
+```javascript
+const  Insertable  =  require('db-populator/lib/insertable');
+const  Random  =  require('db-populator/lib/random');
+
+// a fn that receives a instance of (db-populator/lib/id) as param
+const  dbStructure  =  (id)  => ({
+	't_customer': {
+		'id': { 'type':  'int', val:  id.getNext('t_customer') },
+		'name': { type:  'string', val:  Random.fromList(['John', 'Paul', 'Suzan', 'Mark']) },
+	},
+	't_address': {
+		'id': { 'type':  'int', val:  id.getNext('t_address') },
+		'customer_id': { 'type':  'int', val:  id.getCurrent('t_customer') }, // get last id created, for you not have to fill it.
+		'country': { type:  'string', val:  Random.fromList(['Brazil', 'United States', 'Canada']) }, //check out all the options for this random class at the end of documentation
+	}
+});
+
+const  initialIds  = {
+	't_customer':  26,
+	't_address':  105
+};
+const  insert  =  new  Insertable(dbStructure, initialIds);
+
+insert.add('t_customer', { name:  'Gabriel'});
+insert.add('t_address', {});
+const  customer  =  insert.add('t_customer', {});
+insert.add('t_address', { country:  customer.name});
+
+insert.printSQLs();
+//INSERT INTO t_customer(id,name) VALUES (27,'Gabriel');
+//INSERT INTO t_address(id,customer_id,country) VALUES (106,27,'Brazil');
+//INSERT INTO t_customer(id,name) VALUES (28,'John');
+//INSERT INTO t_address(id,customer_id,country) VALUES (107,28,'John');
+```
+
 
 And that's all! It will return your inserts.
 ## About the json
@@ -98,32 +142,10 @@ insert.addParser('my-special-type', (val)  => {
      //return insert.addQuotes('timestamp' + val);  // easier way to use the same quotes everywhere
      return '"timestamp ' + val +'"'; //remember to add quotes if is string 
 });
-
-configure(new GenericSQLBuilder(dbStructure(id, valueStrategyParser)));
+insert.add('t_customer', ...)
 
 ```
 
-## Basic Example
-
-Check the folder: [example](https://github.com/gabrielscarvalho/db-populator/tree/master/example "example")
-Inside of it, you will find 3 files:
-* db-structure: defines the db rules
-* insert: configure the insert 
-* index.js: run your command.
-```javascript
-const  Insertable  =  require('./lib/insertable');
-//your db mapping
-const  dbStructure  =  require('./db-structure');
-
-const  initialIds  = {
-	't_customer':  30,
-	't_address':  0
-};
-const  insert  =  new  Insertable(dbStructure, initialIds);
-
-insert.add('t_customer', { name: 'John'});
-insert.printSQLs();
-```
 ## INSERTABLE METHODS
 
 ### insert.add(string tableName, object extraData)
@@ -246,4 +268,87 @@ insert.addParser('my-special-type', (val)  => {
 }
 insert.add('t_customer', {});
 // insert into t_customer (field_x) values ('my special treatment!!! hi');
+```
+
+## Val
+Val is the prop for the value of the column.
+You can use it with a simple function or a literal value:
+```javascript
+'t_customer' : {
+    'columnA': {type: 'string', val: () => return 'fn response: ' + Math.random()},
+    'columnB': {type: 'string', val:  'const literal response'},
+}
+// { columnA: 'fn response 0.849320192', columnB: 'const literal response'}
+```
+This concept is used by ID & Random 
+
+## Random
+Random helps you to create random information.
+It will return a function that when it is executed, will return a random value.
+```javascript
+const  Random  =  require('db-populator/lib/random');
+const result = Random.fromList(['A','B','C','D'])
+console.log(typeof result); //function
+console.log(result()); // B
+
+const result = Random.fromDoubleList(['A','B','C','D'], ['a','b','c'])
+console.log(result()); // Ba
+
+//Number as well
+const result = Random.number( {min: 2, max: 15, decimals: 3)
+console.log(result()); // 7.324
+
+//Date
+const result = Random.date( {minYear: 1990, maxYear: 1995, maxMonth: 5, addTime: true)
+console.log(result()); // Date object with 1994-03-21 19:10:05
+
+const result = Random.date( {minYear: 2000, maxMonth: 10)
+console.log(result()); // Date object with 2030-10-21 00:00:00
+```
+You can use all of them at your table:
+```javascript
+'t_customer': {
+	'id': { 'type':  'int', val:  id.getNext('t_customer') },
+	'name': { type:  'string', val:  Random.fromList(['John', 'Paul', 'Suzan', 'Mark']) },
+	'surname': { type:  'string', val:  Random.fromList(['Doe', 'Mcknight', 'Gates', 'Jobs']) },
+	'email': { type:  'string', val:  Random.fromDoubleList(['John', 'Paul', 'Suzan', 'Mark'], ['@gmail.com', '@hotmail.com']) },
+	'birthDate': { type:  'date', val:  Random.date({ minYear:  1970, maxYear:  2010 }) },
+	'creation_date': { type:  'datetime', val:  Random.date({ addTime:  true, minYear:  2018, maxYear:  2022 }) }
+}
+```
+
+## ID
+Helps you create incremental IDs, if you don't want to put them one-by-one.
+
+```javascript
+const  Random  =  require('db-populator/lib/id');
+for(var i=0; i <5; i++){ 
+	const result = id.getNext('t_customer');
+	console.log(typeof result); // function
+	result(); // 1, 2, 3, 4, 5
+}
+console.log(id.getCurrent('t_customer')()); // 5 - will return the last inserted.
+
+```
+
+### Example of use:
+
+```javascript
+const dbStructure = (id) => {
+	't_customer': {
+		'id': { 'type':  'int', val:  id.getNext('t_customer') },
+	 },
+	 't_address': {
+		'id': { 'type':  'int', val:  id.getNext('t_address') },
+		'customer_id': { 'type':  'int', val:  id.getCurrent('t_customer') },
+	 }
+};
+const initialIds = {
+  't_customer': 10
+}
+insert.add('t_customer', {}); // id = 11
+insert.add('t_address', {}); // id = 1, customer_id = 11
+insert.add('t_address', {}); // id = 2, customer_id = 11
+insert.add('t_customer', {}); // id = 12
+insert.add('t_address', {}); // id = 3, customer_id = 12
 ```
