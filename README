@@ -145,6 +145,17 @@ insert.addParser('my-special-type', (val)  => {
 insert.add('t_customer', ...)
 
 ```
+## Values
+*Val* is the prop for the value of the column.
+You can use it with a simple function or a literal value:
+```javascript
+'t_customer' : {
+    'columnA': {type: 'string', val: () => return 'fn response: ' + Math.random()},
+    'columnB': {type: 'string', val:  'const literal response'},
+}
+// { columnA: 'fn response 0.849320192', columnB: 'const literal response'}
+```
+This concept is used by ID & Random (documentation down below)
 
 ## INSERTABLE METHODS
 
@@ -251,6 +262,13 @@ insert.add('t_customer', {});
 ```
 Obviously, use it to switch between single quote ' or double quote: ".
 
+### insert.addRawInsert(sql)
+Adds a insert mannualy.
+
+### insert.addComment(comment)
+Adds a comment to split the sqls.
+
+
 ### insert.addQuotes(string)
 When creating custom parsers, it will help you to standardize the quote used.
 Check the *insert.addParser()* method for the example;
@@ -270,40 +288,38 @@ insert.add('t_customer', {});
 // insert into t_customer (field_x) values ('my special treatment!!! hi');
 ```
 
-## Val
-Val is the prop for the value of the column.
-You can use it with a simple function or a literal value:
-```javascript
-'t_customer' : {
-    'columnA': {type: 'string', val: () => return 'fn response: ' + Math.random()},
-    'columnB': {type: 'string', val:  'const literal response'},
-}
-// { columnA: 'fn response 0.849320192', columnB: 'const literal response'}
-```
-This concept is used by ID & Random 
-
 ## Random
 Random helps you to create random information.
 It will return a function that when it is executed, will return a random value.
 ```javascript
-const  Random  =  require('db-populator/lib/random');
+const Random = require('db-populator/lib/random');
 const result = Random.fromList(['A','B','C','D'])
 console.log(typeof result); //function
 console.log(result()); // B
 
-const result = Random.fromDoubleList(['A','B','C','D'], ['a','b','c'])
-console.log(result()); // Ba
+//A more complex example, with multiple lists and fixed values at the middle
+const result = Random.fromList(['john','mary'], '::fixed-value::', ['other', 'list', 'to','apply','random'])
+console.log(result()); // 'mary::fixed-value::to'
+
+//Random string is limited to 12 random characters at the moment.
+const result = Random.string('prefix-', 4);
+console.log(result()); //prefix-9a9k
 
 //Number as well
 const result = Random.number( {min: 2, max: 15, decimals: 3)
 console.log(result()); // 7.324
 
 //Date
-const result = Random.date( {minYear: 1990, maxYear: 1995, maxMonth: 5, addTime: true)
+const result = Random.date( {minYear: 1990, maxYear: 1995, maxMonth: 5)
 console.log(result()); // Date object with 1994-03-21 19:10:05
 
-const result = Random.date( {minYear: 2000, maxMonth: 10)
-console.log(result()); // Date object with 2030-10-21 00:00:00
+const result = Random.date( {minYear: 2000, maxMonth: 10} )
+console.log(result()); // Date object with 2030-10-21 10:15:36
+
+const result = Random.dateWithSpecific( {year:  1998, day:  15, month:  3, hour:  20, minute:  42, seconds:  23})
+console.log(result()); // Date object with 1998-3-15 20:42:23
+//All args of this method are optional
+
 ```
 You can use all of them at your table:
 ```javascript
@@ -321,7 +337,6 @@ You can use all of them at your table:
 Helps you create incremental IDs, if you don't want to put them one-by-one.
 
 ```javascript
-const  Random  =  require('db-populator/lib/id');
 for(var i=0; i <5; i++){ 
 	const result = id.getNext('t_customer');
 	console.log(typeof result); // function
@@ -351,4 +366,16 @@ insert.add('t_address', {}); // id = 1, customer_id = 11
 insert.add('t_address', {}); // id = 2, customer_id = 11
 insert.add('t_customer', {}); // id = 12
 insert.add('t_address', {}); // id = 3, customer_id = 12
+```
+Other possibility is to generate random codes.
+And they will work the same as generating ids.
+```javascript
+for(var i=0; i <5; i++){ 
+    //fieldUniqueName, prefix <default = fieldName>, randomLength <default = 5>)
+	const result = id.getNextRandomCode('customer.code','customer-', 5);
+	console.log(typeof result); // function
+	result(); // 'customer-ak20fa | customer-pcka03 ...
+}
+console.log(id.getCurrentCode('customer.code')()); // customer-pcka03 - will return the last inserted.
+
 ```
