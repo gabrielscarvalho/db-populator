@@ -1,0 +1,6 @@
+-- Allow id to have multiple ids for tables.
+setNextIdStrategy(tableName, columnName, previousID)
+random to return random string
+date should always return time - parser should use it or not.
+-- add timestamp type
+-- make exception of type more friendly
