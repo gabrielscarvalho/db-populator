@@ -1,6 +1,6 @@
 {
   "name": "db-populator",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "helps you to easily creates inserts to whatever db you are using",
   "main": "generator.js",
   "scripts": {
