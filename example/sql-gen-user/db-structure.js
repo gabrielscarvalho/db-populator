@@ -6,7 +6,7 @@ const dataGenerator = (id) => ({
         'id': { 'type': 'int', val: id.getNext('t_customer') },
         'name': { type: 'string', val: Random.fromList(['John', 'Paul', 'Suzan', 'Mark']) },
         'surname': { type: 'my-special-type', val: Random.fromList(['Doe', 'Mcknight', 'Gates', 'Jobs']) },
-        'email': { type: 'string', val: Random.fromDoubleList(['John', 'Paul', 'Suzan', 'Mark'], ['@gmail.com', '@hotmail.com']) },
+        'email': { type: 'string', val: Random.fromList(['John', 'Paul', 'Suzan', 'Mark'], ['@gmail.com', '@hotmail.com']) },
         'birthDate': { type: 'date', val: Random.date({ minYear: 1970, maxYear: 2010 }) },
         'creation_date': { type: 'datetime', val: Random.date({ addTime: true, minYear: 2018, maxYear: 2022 }) }
     },
