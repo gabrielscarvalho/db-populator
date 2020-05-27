@@ -34,7 +34,7 @@ After that, you can create your data, calling:
 
 ## Basic Example
 
-Check the folder: [example](https://github.com/gabrielscarvalho/db-populator/tree/master/example "example")
+Check out the folder: [example](https://github.com/gabrielscarvalho/db-populator/tree/master/example "example")
 Inside of it, you will find 3 files:
 * db-structure: defines the db rules
 * insert-configure	: configure the insert 
@@ -77,11 +77,12 @@ insert.printSQLs();
 
 And that's all! It will return your inserts.
 ## About the json
+
 It must contain the structure:
 ```javascript
     {
     <table_name> : {
-       <column_name or easier identifier> :  { type: <type_of_column>, val: <raw_or_fn()>, columnName: <optional String>  }
+       <column_name or easier identifier> :  { type: <type_of_column>, val: <raw_or_fn()>, column: <optional String>  }
     }
 ```
 Example:
@@ -89,7 +90,7 @@ Example:
     {
      't_customer' : {
          'id': { 'type':  'int', val:  id.getNext('t_customer'), column: 'customer_id' },
-         'name' : { type: 'string', val: 'John', columnName: 'customer_name' },
+         'name' : { type: 'string', val: 'John', column: 'customer_name' },
          'birth_date': { type: 'date', val: Random.date({ minYear:  1970, maxYear:  2010 })} 
       }
     }
@@ -106,15 +107,8 @@ In this example, if we execute:
  - *id.getNext('t_customer')* helps you to get the next id easily, but you still can force the next value.
 	 - *id.getCurrent('t_customer')* will return the last customer created id
  - the field "val" must be the literal value or a function that will return it.
-	 - In the example of Random.date, it returns:
+	 - Check out the documentation of it down below.
 
-```javascript
- Random.date = (params) => {
-     return () => {
-        return formatDate(randomDate, params)
-     }
-} 
-```
 
 ## Types
 
@@ -136,13 +130,24 @@ At this moment, you can use:
 You are able to add or replace types if required.
 
 ```javascript
+const dbStructure = (id) =>{
+   't_customer' => {
+       'fieldX' : { type: 'my-special-type', val: Random.date(), column: 'special_type' }
+    }
+}
 const  insert  =  new  Insertable(dbStructure, initialIds);
 
 insert.addParser('my-special-type', (val)  => {
-     //return insert.addQuotes('timestamp' + val);  // easier way to use the same quotes everywhere
-     return '"timestamp ' + val +'"'; //remember to add quotes if is string 
+	//remember to add quotes if is string 
+    return insert.addQuotes('year-month: ' + val.getFullYear() + '-' + (val.getMonth()+1)); 
 });
-insert.add('t_customer', ...)
+
+//notice that the field value contains only the value.
+const customer = insert.add('t_customer', {});
+console.log(customer.fieldX); // Date object (2010-11-29 12:01:34)
+
+insert.printSQLs();
+//INSERT into t_customer (special_type) VALUES ('year-month: 2010-11');
 
 ```
 ## Values
@@ -156,6 +161,25 @@ You can use it with a simple function or a literal value:
 // { columnA: 'fn response 0.849320192', columnB: 'const literal response'}
 ```
 This concept is used by ID & Random (documentation down below)
+
+## Column
+*column* is the optional property that will name the informed column into the query.
+It is **only used for query**. The object returned by *insert.add(tableName, extraData)* will have the same props as you have mapped in *db-structure*. 
+```javascript
+//db-structure:
+'t_customer' : {
+    'columnA': {type: 'string', val: 'fixed value', column: 'a_huge_column_name'},
+    'columnB': {type: 'string', val:  'b value'}, // without column name, this field will be named: columnB on the insert
+    'real_column_name': {type: 'string', val:  'real_column'}, //if you use the identifier as the real name of the column, you dont need to add the column prop.
+}
+
+const obj =insert.add('t_customer', {columnA : 'new value'})
+console.log(obj); // {columnA: 'new value', columnB: 'b value', real_column_name: 'real_column'}
+insert.printSQLs();
+//INSERT Into t_customer (a_huge_column_name, columnB, real_column_name) VALUES ('new value', 'b value', 'real_column');
+// { columnA: 'fn response 0.849320192', columnB: 'const literal response'}
+```
+
 
 ## INSERTABLE METHODS
 
@@ -181,15 +205,17 @@ You can use it to make cascade inserts:
     const customer = insert.add('t_customer', { name: 'Mary' })
     insert.add('t_address', { customer_id: customer.id})
 ```
-**Note**: the object returned will have the same props as your table is mapped.
+**Note**: the object returned will have the same props as your json is mapped.
  That is the reason you can use *customer.id* on the second insert, instead of *customer.customer_id* (that is the real column name)
 
 ### insert.printSQLs()
 Print all SQLs saved until that moment.
 ### insert.objects
-Return all objects that you have created
+Return all objects that you have created.
+
 ### insert.completeObjects
-Prints all objects that will be used to create your inserts. As the name says, is more complete.
+Return all objects that will be used to create your inserts. 
+It contains the structure used to created the *insert.objects*;
 
 ### insert.setNextIdStrategy(fn)
 Set the strategy to choose the next id:
@@ -214,8 +240,6 @@ Just create your own based on: [https://github.com/gabrielscarvalho/db-populator
 A sample: 
 
 ```javascript
-
-
 class YourOwnQueryBuilder {
 
     constructor(dbStructure, valueStrategyParser = new ValueStrategyParser('"')) {
@@ -252,14 +276,8 @@ After that, just inform Insertable about it:
 insert.setQueryBuilder(YourOwnQueryBuilder);
 insert.add('t_customer', {});
 ```
-### insert.useStringQuoteSeparator(quoteCharSeparator)
-Sets the char that will wrap every string on the query
-```javascript
-insert.useStringQuoteSeparator('A_COMPLETELY_INVALID_ONE');
-insert.add('t_customer', {});
-// insert into ... VALUES(A_COMPLETELY_INVALID_ONEjohnA_COMPLETELY_INVALID_ONE, other values..)
-// a valid one: insert.useStringQuoteSeparator('"');
-```
+
+
 Obviously, use it to switch between single quote ' or double quote: ".
 
 ### insert.addRawInsert(sql)
@@ -269,6 +287,15 @@ Adds a insert mannualy.
 Adds a comment to split the sqls.
 
 
+### insert.useStringQuoteSeparator(quoteCharSeparator)
+Sets the char that will wrap every string on the query
+```javascript
+insert.useStringQuoteSeparator('A_COMPLETELY_INVALID_ONE');
+insert.add('t_customer', {});
+// insert into ... VALUES(A_COMPLETELY_INVALID_ONEjohnA_COMPLETELY_INVALID_ONE, other values..)
+// a valid one: insert.useStringQuoteSeparator('"');
+```
+
 ### insert.addQuotes(string)
 When creating custom parsers, it will help you to standardize the quote used.
 Check the *insert.addParser()* method for the example;
@@ -277,6 +304,7 @@ Its just a shortcut to add the quotes to a simple string.
 ### insert.addParser(type, fn)
 Allows you to add new parsers.
 ```javascript
+insert.useStringQuoteSeparator('"');
 insert.addParser('my-special-type', (val)  => {
 	insert.addQuotes('my special treatment!!!  '+  val)
 });
@@ -285,7 +313,7 @@ insert.addParser('my-special-type', (val)  => {
     'field_x': {type: 'my-speacial-type', val: 'hi'}
 }
 insert.add('t_customer', {});
-// insert into t_customer (field_x) values ('my special treatment!!! hi');
+// insert into t_customer (field_x) values ("my special treatment!!! hi");
 ```
 
 ## Random
@@ -313,9 +341,6 @@ console.log(result()); // 7.324
 const result = Random.date( {minYear: 1990, maxYear: 1995, maxMonth: 5)
 console.log(result()); // Date object with 1994-03-21 19:10:05
 
-const result = Random.date( {minYear: 2000, maxMonth: 10} )
-console.log(result()); // Date object with 2030-10-21 10:15:36
-
 const result = Random.dateWithSpecific( {year:  1998, day:  15, month:  3, hour:  20, minute:  42, seconds:  23})
 console.log(result()); // Date object with 1998-3-15 20:42:23
 //All args of this method are optional
@@ -327,7 +352,7 @@ You can use all of them at your table:
 	'id': { 'type':  'int', val:  id.getNext('t_customer') },
 	'name': { type:  'string', val:  Random.fromList(['John', 'Paul', 'Suzan', 'Mark']) },
 	'surname': { type:  'string', val:  Random.fromList(['Doe', 'Mcknight', 'Gates', 'Jobs']) },
-	'email': { type:  'string', val:  Random.fromDoubleList(['John', 'Paul', 'Suzan', 'Mark'], ['@gmail.com', '@hotmail.com']) },
+	'email': { type:  'string', val:  Random.fromList(['John', 'Paul', 'Suzan', 'Mark'], ['@gmail.com', '@hotmail.com']) },
 	'birthDate': { type:  'date', val:  Random.date({ minYear:  1970, maxYear:  2010 }) },
 	'creation_date': { type:  'datetime', val:  Random.date({ addTime:  true, minYear:  2018, maxYear:  2022 }) }
 }
@@ -379,3 +404,11 @@ for(var i=0; i <5; i++){
 console.log(id.getCurrentCode('customer.code')()); // customer-pcka03 - will return the last inserted.
 
 ```
+
+# Found any problem?
+Please, open a issue on github!
+[https://github.com/gabrielscarvalho/db-populator/issues](https://github.com/gabrielscarvalho/db-populator/issues)
+
+
+## Next Steps
+* Unit tests.
