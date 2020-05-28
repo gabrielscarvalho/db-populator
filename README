@@ -88,18 +88,18 @@ In this example, if we execute:
 ## Types
 
 Types are pre-defined in order to populate the values into the insert. 
-You can see them at: [ValueStrategyParser](https://github.com/gabrielscarvalho/db-populator/blob/master/lib/value-strategy-parser.js "ValueStrategyParser")
-
+You can see them at: [default-value-strategy.js](https://github.com/gabrielscarvalho/db-populator/blob/master/lib/default-value-strategy.js)
 At this moment, you can use:
 
 
 |type| effect on queries| 
 | ------------ | ------------ |
-|string| will put quotes at the variable|
-|int| will parse to int |
-|float| will parse to float|
-| datetime| return a string datetime 'YYYY-MM-DD HH:mm:ss'|
-| date | return a string date 'YYYY-MM-DD'|
+|string| it will put quotes at the variable|
+|int| parse to int |
+|float| parse to float|
+| datetime| parse a data as string 'YYYY-MM-DD HH:mm:ss'|
+| date | parse a data as string 'YYYY-MM-DD'|
+| bool| parse to boolean |
 |raw| will just add the value the same way it is. You can use this for functions, for example, NOW()|
 
 You are able to add or replace types if required.
@@ -107,7 +107,7 @@ You are able to add or replace types if required.
 ```javascript
 const dbStructure = (id) =>{
    't_customer' => {
-       'fieldX' : { type: 'my-special-type', val: Random.date(), column: 'special_type' }
+       'fieldX' : { type: 'my-special-type', val: Random.date({}), column: 'special_type' }
     }
 }
 const  insert  =  new  Insertable(dbStructure, initialIds);
