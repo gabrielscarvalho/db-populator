@@ -1,36 +1,11 @@
 
 
+
 # DB Populator
-Make it easy to populate your test database, creating inserts based on a simple json:
-```javascript
-    import Random from ...
-    const dbStructure = (id) => {
-	    't_customer': {
-	         'id': { 'type':  'int', val: id.getNext('t_customer') },
-	         'name': { type:  'string', val: Random.fromList(['John', 'Paul', 'Suzan', 'Mark']) },
-	    },
-	    
-	    't_address': {
-	       'id': { 'type':  'int', val: id.getNext('t_address') },
-	       'customer_id': { 'type':  'int', val: id.getCurrent('t_customer') },
-	       'street': { type:  'string', val: Random.fromList(['St. Abc', 'St. Cde']) },
-	       'number': { type:  'int', val: Random.number({ min:  1, max:  150 }) },
-	       'is_main_address': { type:  'bool', val: Random.fromList([true, false]) }
-	    }
-   }
-```
-Containing: table, column, type and value.
-After that, you can create your data, calling:
-```javascript
-    const  customer  = insert.add('t_customer', { 'email':  'john120@gmail.com' })
-    insert.add('t_address', { 'street':  'delivery address' });
-    insert.add('t_address', { 'street':  'invoice address', customer_id: customer.id });
-    insert.printSQLs();
-    
-    //INSERT INTO t_customer(id,name,surname,email,birthDate,creation_date) VALUES (-1,'Suzan','Doe','john120@gmail.com','1975-05-11','2019-01-01T09:41:23');
-    //INSERT INTO t_address(id,customer_id,street,number,country,creation_date,is_main_address) VALUES (110,-1,'delivery address',139,'United States','2021-12-25T14:16:27',false);
-    //INSERT INTO t_address(id,customer_id,street,number,country,creation_date,is_main_address) VALUES (120,-1,'invoice address',74,'United States','2019-12-01T20:48:15',false);
-```
+Make it easy to populate your test database, creating inserts based on a simple json.
+It will deal with IDs and random column filling, letting you free to focus in what makes your scenario unique.
+
+![Db populator full scenario generating](https://raw.githubusercontent.com/gabrielscarvalho/db-populator/master/img/code_example.png)
 
 ## Basic Example
 
@@ -123,7 +98,7 @@ At this moment, you can use:
 |string| will put quotes at the variable|
 |int| will parse to int |
 |float| will parse to float|
-| datetime| return a string datetime 'YYYY-MM-DDTHH:mm:ss'|
+| datetime| return a string datetime 'YYYY-MM-DD HH:mm:ss'|
 | date | return a string date 'YYYY-MM-DD'|
 |raw| will just add the value the same way it is. You can use this for functions, for example, NOW()|
 
@@ -181,7 +156,10 @@ insert.printSQLs();
 ```
 
 
-## INSERTABLE METHODS
+# Class Docs
+
+## Insertable
+Insertable is the main class of this project. It will create the inserts.
 
 ### insert.add(string tableName, object extraData)
 Creates a new sql insert and save it.
@@ -210,6 +188,7 @@ You can use it to make cascade inserts:
 
 ### insert.printSQLs()
 Print all SQLs saved until that moment.
+
 ### insert.objects
 Return all objects that you have created.
 
@@ -316,6 +295,18 @@ insert.add('t_customer', {});
 // insert into t_customer (field_x) values ("my special treatment!!! hi");
 ```
 
+### insert.setNullValue(nullString)
+Defines the string that will be used when a value is null
+```javascript
+//db-structure.js:
+'t_customer' : {
+    'name': {type: 'string', val: null},
+    'surname': {type: 'string', val: 'Doe'}
+}
+insert.setNullValue('null');
+insert.add('t_customer', {});
+// insert into t_customer (name, surname) values (null, 'Doe');
+```
 ## Random
 Random helps you to create random information.
 It will return a function that when it is executed, will return a random value.
@@ -361,6 +352,8 @@ You can use all of them at your table:
 ## ID
 Helps you create incremental IDs, if you don't want to put them one-by-one.
 
+### INCREMENTAL IDS
+
 ```javascript
 for(var i=0; i <5; i++){ 
 	const result = id.getNext('t_customer');
@@ -371,7 +364,7 @@ console.log(id.getCurrent('t_customer')()); // 5 - will return the last inserted
 
 ```
 
-### Example of use:
+#### Example of use:
 
 ```javascript
 const dbStructure = (id) => {
@@ -392,8 +385,13 @@ insert.add('t_address', {}); // id = 2, customer_id = 11
 insert.add('t_customer', {}); // id = 12
 insert.add('t_address', {}); // id = 3, customer_id = 12
 ```
-Other possibility is to generate random codes.
-And they will work the same as generating ids.
+
+### RANDOM STRING CODES
+Other possibility is to generate random codes. They will work the same way as generating ids.
+
+----------
+
+
 ```javascript
 for(var i=0; i <5; i++){ 
     //fieldUniqueName, prefix <default = fieldName>, randomLength <default = 5>)
@@ -408,7 +406,3 @@ console.log(id.getCurrentCode('customer.code')()); // customer-pcka03 - will ret
 # Found any problem?
 Please, open a issue on github!
 [https://github.com/gabrielscarvalho/db-populator/issues](https://github.com/gabrielscarvalho/db-populator/issues)
-
-
-## Next Steps
-* Unit tests.
