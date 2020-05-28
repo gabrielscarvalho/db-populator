@@ -273,7 +273,7 @@ class YourOwnQueryBuilder {
 ```
 After that, just inform Insertable about it:
 ```javascript
-insert.setQueryBuilder(YourOwnQueryBuilder);
+insert.setQueryBuilder(YourOwnQueryBuilder); //its the class and not the object!!!
 insert.add('t_customer', {});
 ```
 
