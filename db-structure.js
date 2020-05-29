@@ -4,9 +4,9 @@ const dataGenerator = (id) => ({
 
     't_customer': {
         'id': { 'type': 'int', val: id.getNext('t_customer') },
-        'name': { type: 'string', val: Random.fromList(['John', 'Paul', 'Suzan', 'Mark']) },
-        'surname': { type: 'string', val: Random.fromList(['Doe', 'Mcknight', 'Gates', 'Jobs']) },
-        'email': { type: 'string', val: Random.fromList(['John', 'Paul', 'Suzan', 'Mark'],'@', ['gmail', 'hotmail'], ['.com.br', '.com'], '123') },
+        'name': { type: 'string', val: Random.name() },
+        'surname': { type: 'string', val: Random.lastName() },
+        'email': { type: 'string', val: Random.email() },
         'birthDate': { type: 'date', val: Random.date({ minYear: 1970, maxYear: 2010 }) },
         'creation_date': { type: 'datetime', val: Random.date({ addTime: true, minYear: 2018, maxYear: 2022 }) }
     },

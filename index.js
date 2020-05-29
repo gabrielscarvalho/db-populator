@@ -2,7 +2,7 @@
 const insert = require('./configure-insert');
 
 
-insert.add('t_customer', { 'email': 'john120@gmail.com' })
+insert.add('t_customer')
 const address1 = insert.add('t_address', { 'street': 'delivery address' });
 const address2 = insert.add('t_address', { 'street': 'invoice address' });
 insert.add('t_order', { 'delivery_ad': address1.id, 'invoice_ad': address2.id });

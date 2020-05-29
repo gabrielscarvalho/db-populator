@@ -1,6 +1,7 @@
 
 
 
+
 # DB Populator
 Make it easy to populate your test database, creating inserts based on a simple json.
 It will deal with IDs and random column filling, letting you free to focus in what makes your scenario unique.
@@ -310,6 +311,28 @@ insert.add('t_customer', {});
 ## Random
 Random helps you to create random information.
 It will return a function that when it is executed, will return a random value.
+
+Random is now using [ChanceJS](https://chancejs.com/index.html) to return its values. 
+All Random methods that are supporting ChanceJS, they have the URL of the documentation in their comments.
+
+Currently, the random methods are:
+
+* string
+* fromList
+* number
+* date
+* dateWithSpecific
+* word
+* email
+* guid
+* hash
+* char
+* cpf
+* name
+* lastName
+* url
+
+**Check the examples**:
 ```javascript
 const Random = require('db-populator/lib/random');
 const result = Random.fromList(['A','B','C','D'])
@@ -320,7 +343,6 @@ console.log(result()); // B
 const result = Random.fromList(['john','mary'], '::fixed-value::', ['other', 'list', 'to','apply','random'])
 console.log(result()); // 'mary::fixed-value::to'
 
-//Random string is limited to 12 random characters at the moment.
 const result = Random.string('prefix-', 4);
 console.log(result()); //prefix-9a9k
 
@@ -336,14 +358,50 @@ const result = Random.dateWithSpecific( {year:  1998, day:  15, month:  3, hour:
 console.log(result()); // Date object with 1998-3-15 20:42:23
 //All args of this method are optional
 
+const result = Random.word();
+console.log(result()); //aswade
+
+const result = Random.name();
+console.log(result()); //John
+
+const result = Random.lastName();
+console.log(result()); //Doe
+
+const result = Random.email();
+console.log(result()); //random321@email.com
+
+const result = Random.guid();
+console.log(result()); // f0d8368d-85e2-54fb-73c4-2d60374295e3
+
+const result = Random.hash();
+console.log(result()); // e5162f27da96ed8e1ae51def1ba643b91d2581d8
+
+const result = Random.char();
+console.log(result()); // C
+
+const result = Random.cpf();
+console.log(result()); // 111.444.777-35
+
+const result = Random.url();
+console.log(result()); // http://domain.com
+```
+And  you can create your own methods. Just remember of the pattern:
+```javascript
+const randomPhone = (params) => {
+   return () => {
+      return Math.random() + params;
+   }
+};
+const result = randomPhone('test');
+result(); // 0.312809382109test
 ```
 You can use all of them at your table:
 ```javascript
 't_customer': {
 	'id': { 'type':  'int', val:  id.getNext('t_customer') },
-	'name': { type:  'string', val:  Random.fromList(['John', 'Paul', 'Suzan', 'Mark']) },
-	'surname': { type:  'string', val:  Random.fromList(['Doe', 'Mcknight', 'Gates', 'Jobs']) },
-	'email': { type:  'string', val:  Random.fromList(['John', 'Paul', 'Suzan', 'Mark'], ['@gmail.com', '@hotmail.com']) },
+	'name': { type:  'string', val:  Random.name() },
+	'surname': { type:  'string', val:  Random.lastName() },
+	'email': { type:  'string', val: Random.email() },
 	'birthDate': { type:  'date', val:  Random.date({ minYear:  1970, maxYear:  2010 }) },
 	'creation_date': { type:  'datetime', val:  Random.date({ addTime:  true, minYear:  2018, maxYear:  2022 }) }
 }
