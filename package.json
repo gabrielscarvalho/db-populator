@@ -1,11 +1,11 @@
 {
   "name": "db-populator",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "Helps you to easily creates inserts to whatever db you are using.",
   "main": "generator.js",
   "scripts": {
     "test": "jest",
-    "lint" : "eslint ."
+    "lint": "eslint ."
   },
   "keywords": [
     "db",
@@ -18,8 +18,8 @@
     "data"
   ],
   "author": {
-    "name" : "Gabriel Santos Carvalho",
-    "email" : "gabriel.scarvalho310@gmail.com"
+    "name": "Gabriel Santos Carvalho",
+    "email": "gabriel.scarvalho310@gmail.com"
   },
   "license": "MIT",
   "devDependencies": {
