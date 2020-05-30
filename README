@@ -1,7 +1,7 @@
 # DB Populator
 
-![Travis Status](https://img.shields.io/travis/gabrielscarvalho/db-populator) ![Type](https://img.shields.io/badge/type-CLI-yellow.svg?style=flat-square)  ![NPM License](https://img.shields.io/npm/l/db-populator) [](https://github.com/gabrielscarvalho/db-populator) ![GitHub issues](https://img.shields.io/github/issues/gabrielscarvalho/db-populator)  ![GitHub stars](https://img.shields.io/github/stars/gabrielscarvalho/db-populator.svg?style=social&label=Stars)
-
+![Travis Status](https://img.shields.io/travis/gabrielscarvalho/db-populator) ![Type](https://img.shields.io/badge/type-CLI-yellow.svg?style=flat-square)  ![NPM License](https://img.shields.io/npm/l/db-populator) [](https://github.com/gabrielscarvalho/db-populator) ![GitHub issues](https://img.shields.io/github/issues/gabrielscarvalho/db-populator)  [![GitHub stars](https://img.shields.io/github/stars/gabrielscarvalho/db-populator.svg?style=social&label=Stars)
+]([https://github.com/gabrielscarvalho/db-populator](https://github.com/gabrielscarvalho/db-populator))
 Make it easy to populate your test database, creating inserts based on a simple json.
 It will deal with IDs and random column filling, letting you free to focus in what makes your scenario unique.
 
