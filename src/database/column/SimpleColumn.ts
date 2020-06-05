@@ -8,7 +8,7 @@ import  Table  from '../table';
 export class SingleColumn implements Column {
     val: Value;
 
-    constructor(public table: Table, public name: string, public type: string, val: Function, public id: boolean) {
+    constructor(public table: Table, public identifier: string, public type: string, val: Function, public name: string | undefined = undefined) {
         this.val = new Value(table, this, val);
     }
 }

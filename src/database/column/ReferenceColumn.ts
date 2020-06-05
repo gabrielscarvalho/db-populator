@@ -10,7 +10,7 @@ export class ReferenceColumn implements Column {
     type: string;
     val: Value;
 
-    constructor(public table: Table, public name: string, protected reference: Column) {
+    constructor(public table: Table, public identifier: string, protected reference: Column, public name: string | undefined = undefined) {
         this.type = reference.type;
         this.val = reference.val;
     }

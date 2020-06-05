@@ -1,7 +1,7 @@
 
 import ValueGenerator from '../value-generator';
 
-class Id implements ValueGenerator {
+export class Id implements ValueGenerator {
 
     getNext(param: string): any {
 
@@ -11,3 +11,5 @@ class Id implements ValueGenerator {
 
     }
 }
+
+export default Id;

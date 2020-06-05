@@ -2,9 +2,15 @@
 import Column  from './column';
 import ReferenceColumn from './column/ReferenceColumn';
 import SimpleColumn from './column/SimpleColumn';
+import DataRow from '../query/DataRow';
+
+
+
+type NamedColumn = [string, Column];
 
 export class Table {
-    protected columns: [string, Column];
+    protected columns: NamedColumn[] = [];
+    protected dataRow: DataRow[] = [];
 
     constructor(public name: string) {
 
@@ -16,16 +22,25 @@ export class Table {
         }
     }
 
+    addDataRow(dataRow: DataRow){
+        this.dataRow.push(dataRow);
+    }
+
+
+    getLastDataRow(){
+        return this.dataRow[this.dataRow.length-1];
+    }
+
 
     addColumnReference(name: string, reference: Column): Table {
         let col: Column = new ReferenceColumn(this, name, reference)
-        this.columns.push(col);
+        this.columns[name] = col;
         return this;
     }
 
-    addColumn(name: string, type: string, val: any, isID: boolean = false): Table {
-        let col: Column = new SimpleColumn(this, name, type, this.prepareValue(val), isID);
-        this.columns.push(name, col);
+    addColumn(name: string, type: string, val: any, columnName: string | undefined =  undefined): Table {
+        let col: Column = new SimpleColumn(this, name, type, this.prepareValue(val));
+        this.columns[name] = col;
         return this;
     }
 
