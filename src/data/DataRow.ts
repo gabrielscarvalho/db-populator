@@ -7,9 +7,8 @@ import QueryCommand from '../query/query-command';
 export class DataRow {
 
     public data: Map<string, any> = new Map<string, any>();
-
-    constructor(protected table: Table, public command: QueryCommand) {
-
+    constructor(public table: Table, public command: QueryCommand) {
+    
     }
 
     addData(columnIdentifier: string, val: any) {

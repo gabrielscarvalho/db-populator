@@ -2,7 +2,7 @@
 
 
 export interface Parser {
-    type: 'string';
+    type: string;
     parse(val: any): string;
 }
 

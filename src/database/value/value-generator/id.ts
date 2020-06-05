@@ -1,7 +1,5 @@
 
-import ValueGenerator from '../value-generator';
-
-export class Id implements ValueGenerator {
+export class Id{
     protected ids: Map<string, number> = new Map<string, number>();
 
     constructor() {
@@ -19,10 +17,6 @@ export class Id implements ValueGenerator {
             self.ids[idUniqueKey] = self.ids[idUniqueKey] + 1;
             return self.ids[idUniqueKey];
         }
-    }
-
-    getPrevious(param: string): any {
-
     }
 }
 

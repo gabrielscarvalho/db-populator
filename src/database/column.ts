@@ -10,7 +10,10 @@ export class Column {
         public type: string,
         public val: Value,
         public name: string | undefined = undefined) {
-            return this;
+
+        if (name == undefined) {
+            this.name = this.identifier;
+        }
     }
 }
 export type NamedColumn = [string, Column];
