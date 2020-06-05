@@ -19,7 +19,7 @@ order.addColumn('price', 'float', Random.number());
 const consign: Table = new Table('t_consignment');
 
 consign.addColumn('id', 'int', id.getNext('t_consignment.id'))
-    .addColumnReference('orderId', order.getColumn('id'))
+    .addColumnReference('orderId', 'int', order.getColumn('id'))
     .addColumn('price',  'float', Random.number());
     
 
@@ -31,6 +31,7 @@ db
 const queryBuilder : QueryBuilder = new QueryBuilder(db);
 
 const result: DataRow = queryBuilder.insert('t_order', {});
+
 
 //result.data.id = 3;
 

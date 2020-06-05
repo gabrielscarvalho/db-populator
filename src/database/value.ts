@@ -1,11 +1,21 @@
-import Table  from './table';
-import  Column  from './column';
+
 
 export class Value {
-    result: any[]
-    constructor(protected table: Table, protected column: Column, protected fn: Function) {
+    protected fn: Function;
 
+    constructor(val: any) {
+        this.fn = Value.prepare(val);
+    }
+
+    static prepare(val: any): Function {
+        if (typeof val == 'function') {
+            return val;
+        }
+        return () => {
+            return val;
+        }
     }
 }
+
 
 export default Value;

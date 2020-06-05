@@ -1,8 +1,7 @@
 
 import Column  from './column';
-import ReferenceColumn from './column/ReferenceColumn';
-import SimpleColumn from './column/SimpleColumn';
 import DataRow from '../query/DataRow';
+import Value from './value';
 
 
 
@@ -16,12 +15,6 @@ export class Table {
 
     }
 
-    protected prepareValue(val: any): Function {
-        return () => {
-            return 'heeey' + val;
-        }
-    }
-
     addDataRow(dataRow: DataRow){
         this.dataRow.push(dataRow);
     }
@@ -32,21 +25,21 @@ export class Table {
     }
 
 
-    addColumnReference(name: string, reference: Column): Table {
+    addColumnReference(name: string, type: string, reference: Column, columnName: string | undefined = undefined): Table {
 
         let val = () => {
             const dataRow: DataRow = reference.table.getLastDataRow();
             return dataRow.getData(reference);  
         }
 
-        let col: Column = new SimpleColumn(this, name, reference.type, val);
+        let col: Column = new Column(this, name, type, new Value(val), columnName);
         
         this.columns[name] = col;
         return this;
     }
 
     addColumn(name: string, type: string, val: any, columnName: string | undefined =  undefined): Table {
-        let col: Column = new SimpleColumn(this, name, type, this.prepareValue(val));
+        let col: Column = new Column(this, name, type, new Value(val), columnName);
         this.columns[name] = col;
         return this;
     }
