@@ -3,7 +3,7 @@ import Table from './src/database/table';
 import QueryBuilder from './src/query-builder';
 import Id from './src/database/value/value-generator/id';
 import Random from './src/database/value/value-generator/random';
-import DataRow from './src/query/DataRow';
+import DataRow from './src/data/DataRow';
 
 
 const id = new Id();

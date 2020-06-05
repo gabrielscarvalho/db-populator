@@ -1,11 +1,9 @@
 
-import Column  from './column';
-import DataRow from '../query/DataRow';
+import Column, { NamedColumn }  from './column';
+import DataRow from '../data/DataRow';
 import Value from './value';
+import { stringify } from 'querystring';
 
-
-
-type NamedColumn = [string, Column];
 
 export class Table {
     protected columns: NamedColumn[] = [];
@@ -15,10 +13,20 @@ export class Table {
 
     }
 
+
+    getColumns(): Column[]{
+
+        let columns: Column[] = [];
+        for(const [name, column] of this.columns) {
+            columns.push(column);
+        }
+        return columns;
+    }
+
+
     addDataRow(dataRow: DataRow){
         this.dataRow.push(dataRow);
     }
-
 
     getLastDataRow(): DataRow{
         return this.dataRow[this.dataRow.length-1];
@@ -29,7 +37,7 @@ export class Table {
 
         let val = () => {
             const dataRow: DataRow = reference.table.getLastDataRow();
-            return dataRow.getData(reference);  
+            return dataRow.getData(reference.identifier);  
         }
 
         let col: Column = new Column(this, name, type, new Value(val), columnName);

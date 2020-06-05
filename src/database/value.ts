@@ -7,6 +7,11 @@ export class Value {
         this.fn = Value.prepare(val);
     }
 
+    get(): any {
+        return this.fn();
+    }
+
+
     static prepare(val: any): Function {
         if (typeof val == 'function') {
             return val;

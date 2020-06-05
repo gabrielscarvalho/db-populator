@@ -12,6 +12,9 @@ export class Column {
         public name: string | undefined = undefined) {
     }
 }
+export type NamedColumn = [string, Column];
+
+
 
 
 export default Column;
