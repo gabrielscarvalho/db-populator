@@ -1,10 +1,14 @@
-import Table from './table';
-import Parser from './parser';
+import Table from './database/table';
+import Parser from './database/value/parser';
+
+
+
+type NamedParser  = [string, Parser];
 
 
 export class Database {
-    protected tables: Table[];
-    protected parsers: [string, Parser];
+    protected tables: Table[] = [];
+    protected parsers: NamedParser[] = [];
 
     addTable(table: Table): Database {
         this.tables.push(table);
@@ -12,7 +16,7 @@ export class Database {
     }
 
     addParser(type: string, parser: Parser): Database {
-        this.parsers = [type, parser];
+        this.parsers[type] = parser;
         return this;
     }
 }

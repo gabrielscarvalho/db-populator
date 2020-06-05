@@ -10,3 +10,5 @@ export class ParserInteger implements Parser {
     }
     
 }
+
+export default ParserInteger;
