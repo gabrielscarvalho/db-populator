@@ -2,11 +2,11 @@
 import Column, { NamedColumn }  from './column';
 import DataRow from '../data/DataRow';
 import Value from './value';
-import { stringify } from 'querystring';
 
 
 export class Table {
-    protected columns: NamedColumn[] = [];
+
+    protected columns: Map<string, Column> = new Map<string, Column>();
     protected dataRow: DataRow[] = [];
 
     constructor(public name: string) {
@@ -15,11 +15,14 @@ export class Table {
 
 
     getColumns(): Column[]{
-
         let columns: Column[] = [];
-        for(const [name, column] of this.columns) {
+        let name: string;
+
+        for(name in this.columns) {
+            let column: Column = this.columns[name];
             columns.push(column);
         }
+
         return columns;
     }
 
@@ -41,7 +44,6 @@ export class Table {
         }
 
         let col: Column = new Column(this, name, type, new Value(val), columnName);
-        
         this.columns[name] = col;
         return this;
     }

@@ -5,7 +5,6 @@ import Id from './src/database/value/value-generator/id';
 import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
 
-
 const id = new Id();
 
 const db: Database = new Database();
@@ -31,7 +30,18 @@ db
 const queryBuilder : QueryBuilder = new QueryBuilder(db);
 
 const result: DataRow = queryBuilder.insert('t_order', {});
+queryBuilder.insert('t_consignment', {});
 
+queryBuilder.insert('t_order', {});
+queryBuilder.insert('t_order', {});
+queryBuilder.insert('t_consignment', {});
+
+queryBuilder.insert('t_order', {});
+queryBuilder.insert('t_consignment', {});
+queryBuilder.insert('t_consignment', {});
+
+
+queryBuilder.print();
 
 //result.data.id = 3;
 

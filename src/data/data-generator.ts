@@ -5,7 +5,7 @@ import Column, { NamedColumn } from "../database/column";
 
 export class DataGenerator {
 
-    constructor(protected table: Table, protected queryCommand: QueryCommand){
+    constructor(protected table: Table, public queryCommand: QueryCommand){
 
     }
 
@@ -13,9 +13,12 @@ export class DataGenerator {
 
         const dataRow : DataRow = new DataRow(this.table, this.queryCommand);
 
+
         let column: Column;
-        this.table.getColumns().forEach(column => { 
-            dataRow.addData(column.identifier, column.val.get());
+        this.table.getColumns().forEach(column => {
+
+            let val: any = column.val.get();
+            dataRow.addData(column.identifier, val);
         });
 
         this.table.addDataRow(dataRow);

@@ -26,6 +26,10 @@ export class QueryBuilder {
 
 
     print() : string {
+        let dataRow: DataRow;
+        this.dataRows.forEach(dataRow => {
+            console.log('Data is:', JSON.stringify(dataRow.data));
+        });
         return 'sqls';
     }
 }

@@ -5,7 +5,8 @@ import QueryCommand from '../query/query-command';
 
 
 export class DataRow {
-    public data: PropVal[] = [];
+
+    public data: Map<string, any> = new Map<string, any>();
 
     constructor(protected table: Table, public command: QueryCommand) {
 
@@ -19,9 +20,6 @@ export class DataRow {
         return this.data[columnIdentifier] ? this.data[columnIdentifier] : undefined;
     }
 }
-
-
-export type PropVal = [string, any];
 
 
 export default DataRow;
