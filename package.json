@@ -1,19 +1,12 @@
 {
-  "name": "db-populator",
-  "version": "1.0.8",
-  "description": "helps you to easily creates inserts to whatever db you are using",
+  "name": "insertable",
+  "version": "1.0.2",
+  "description": "",
   "main": "generator.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "db",
-    "generator",
-    "faker",
-    "seed",
-    "dummy",
-    "sql",
-    "insert",
     "data"
   ],
   "author": "gabriel santos carvalho",

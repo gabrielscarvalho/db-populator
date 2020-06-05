@@ -1,7 +1,0 @@
-To use the example
-
-Run
-cd sql-gen-user/
-npm install 
-
-node index.js
