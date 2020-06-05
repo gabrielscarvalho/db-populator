@@ -1,5 +1,7 @@
 import Table from '../database/table';
 import QueryCommand from '../query/query-command';
+import Column from '../database/column';
+import Parser from '../database/value/parser';
 
 
 
@@ -7,12 +9,17 @@ import QueryCommand from '../query/query-command';
 export class DataRow {
 
     public data: Map<string, any> = new Map<string, any>();
+    
+    public queryData: Map<string, any> = new Map<string, any>();
+
     constructor(public table: Table, public command: QueryCommand) {
     
     }
 
-    addData(columnIdentifier: string, val: any) {
-        this.data[columnIdentifier] = val;
+    addData(column: Column, val: any) {
+
+        this.queryData[column.name] = column.parser.parse(val);
+        this.data[column.identifier] = val;
     }
 
     getData(columnIdentifier: string) : any {

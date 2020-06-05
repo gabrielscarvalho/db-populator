@@ -1,5 +1,5 @@
 import Parser from "../parser";
-import ParserRaw from "./parser-raw";
+import {ParserRaw} from "./parser-raw";
 
 
 export class ParserInt extends ParserRaw implements Parser {
@@ -11,4 +11,4 @@ export class ParserInt extends ParserRaw implements Parser {
     }
 }
 
-export default ParserInt;
+export default new ParserInt();

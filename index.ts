@@ -10,24 +10,25 @@ const id = new Id();
 const db: Database = new Database();
 
 
-const order: Table = new Table('t_order');
+
+const order: Table = db.newTable('t_order');
+
 order.addColumn('id', 'int', id.getNext('t_order.id'));
-order.addColumn('price', 'float', Random.number());
+order.addColumn('price', 'int', Random.number());
 
 
-const consign: Table = new Table('t_consignment');
+const consign: Table = db.newTable('t_consignment');
 
 consign.addColumn('id', 'int', id.getNext('t_consignment.id'))
     .addColumnReference('orderId', 'int', order.getColumn('id'))
-    .addColumn('price',  'float', Random.number());
-    
+    .addColumn('price', 'int', Random.number());
 
-db
-    .addTable(order)
+
+db.addTable(order)
     .addTable(consign);
 
 
-const queryBuilder : QueryBuilder = new QueryBuilder(db);
+const queryBuilder: QueryBuilder = new QueryBuilder(db);
 
 const result: DataRow = queryBuilder.insert('t_order', {});
 queryBuilder.insert('t_consignment', {});

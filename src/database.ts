@@ -1,22 +1,38 @@
 import Table from './database/table';
 import Parser from './database/value/parser';
+import DefaultParsers from './database/value/parser/default-parsers';
+import Column from './database/column';
 
 
-
-type NamedParser  = [string, Parser];
-type NamedTable  = [string, Table];
 
 export class Database {
-    protected tables: NamedTable[] = [];
-    protected parsers: NamedParser[] = [];
+
+    protected tables: Map<string, Table> = new Map<string, Table>();
+    protected parsers: Map<string, Parser> = new Map<string, Parser>();
+
+    constructor() {
+        this.parsers = DefaultParsers.get();
+    }
+
+
+    newTable(name: string) : Table {
+        const table: Table = new Table(this, name);
+        return table;
+    }
 
     addTable(table: Table): Database {
-        this.tables[table.name]  = table;
+        table.database = this;
+        this.tables[table.name] = table;
         return this;
     }
 
     getTable(tableName: string) {
         return this.tables[tableName];
+    }
+
+
+    getParser(type: string) : Parser {
+        return this.parsers[type]
     }
 
     addParser(type: string, parser: Parser): Database {

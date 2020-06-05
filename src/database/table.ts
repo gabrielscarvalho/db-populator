@@ -2,15 +2,20 @@
 import Column, { NamedColumn }  from './column';
 import DataRow from '../data/DataRow';
 import Value from './value';
+import Database from '../database';
 
 
 export class Table {
 
     protected columns: Map<string, Column> = new Map<string, Column>();
     protected dataRow: DataRow[] = [];
+    
+    constructor(public database: Database, public name: string) {
 
-    constructor(public name: string) {
+    }
 
+    setDatabase(database: Database){
+        this.database = database;
     }
 
 
@@ -43,13 +48,13 @@ export class Table {
             return dataRow.getData(reference.identifier);  
         }
 
-        let col: Column = new Column(this, name, type, new Value(val), columnName);
+        let col: Column = new Column(this, name, this.database.getParser(type), new Value(val), columnName);
         this.columns[name] = col;
         return this;
     }
 
     addColumn(name: string, type: string, val: any, columnName: string | undefined =  undefined): Table {
-        let col: Column = new Column(this, name, type, new Value(val), columnName);
+        let col: Column = new Column(this, name, this.database.getParser(type), new Value(val), columnName);
         this.columns[name] = col;
         return this;
     }

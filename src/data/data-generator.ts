@@ -18,7 +18,8 @@ export class DataGenerator {
         this.table.getColumns().forEach(column => {
 
             let val: any = column.val.get();
-            dataRow.addData(column.identifier, val);
+
+            dataRow.addData(column, val);
         });
 
         this.table.addDataRow(dataRow);

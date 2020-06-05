@@ -5,6 +5,11 @@ export class ParserRaw implements Parser {
 
     type: string = 'raw';
     
+    constructor(){
+        
+    }
+
+
     parse(val: any): string {
         return String(val);
     }
@@ -14,4 +19,4 @@ export class ParserRaw implements Parser {
     }
 }
 
-export default ParserRaw;
+export default new ParserRaw();

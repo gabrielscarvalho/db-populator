@@ -1,15 +1,20 @@
 import Value from './value';
 import Table from './table';
+import Parser from './value/parser';
 
 
 export class Column {
 
+    public type: string;
+
     constructor(
         public table: Table,
         public identifier: string,
-        public type: string,
+        public parser: Parser,
         public val: Value,
         public name: string | undefined = undefined) {
+
+        this.type = this.parser.type;
 
         if (name == undefined) {
             this.name = this.identifier;
