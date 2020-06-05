@@ -18,7 +18,7 @@ export class Table {
 
     protected prepareValue(val: any): Function {
         return () => {
-
+            return 'heeey' + val;
         }
     }
 
@@ -27,13 +27,20 @@ export class Table {
     }
 
 
-    getLastDataRow(){
+    getLastDataRow(): DataRow{
         return this.dataRow[this.dataRow.length-1];
     }
 
 
     addColumnReference(name: string, reference: Column): Table {
-        let col: Column = new ReferenceColumn(this, name, reference)
+
+        let val = () => {
+            const dataRow: DataRow = reference.table.getLastDataRow();
+            return dataRow.getData(reference);  
+        }
+
+        let col: Column = new SimpleColumn(this, name, reference.type, val);
+        
         this.columns[name] = col;
         return this;
     }
