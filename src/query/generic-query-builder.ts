@@ -29,8 +29,16 @@ export class GenericQueryBuilder implements IQueryBuilder {
 
     protected insert(dataRow: DataRow): string {
 
-        let SQL: string = `INSERT INTO ${dataRow.table.name}   ${JSON.stringify(dataRow.data)}`;
+        let columns: string[] = [];
+        let values: string[] = [];
 
+        let columnName: string;
+        for(columnName in dataRow.queryData) {
+            columns.push(columnName);
+            values.push(dataRow.queryData[columnName]);
+        }
+
+        let SQL: string = `INSERT INTO ${dataRow.table.name} (${columns.join(',')}) VALUES (${values.join(',')});`;
         return SQL;
     }
 

@@ -17,6 +17,7 @@ export class Database {
 
     newTable(name: string) : Table {
         const table: Table = new Table(this, name);
+        this.tables[name] = table;
         return table;
     }
 

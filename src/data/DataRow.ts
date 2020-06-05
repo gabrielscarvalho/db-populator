@@ -10,14 +10,13 @@ export class DataRow {
 
     public data: Map<string, any> = new Map<string, any>();
     
-    public queryData: Map<string, any> = new Map<string, any>();
+    public queryData: Map<string, string> = new Map<string, string>();
 
     constructor(public table: Table, public command: QueryCommand) {
     
     }
 
     addData(column: Column, val: any) {
-
         this.queryData[column.name] = column.parser.parse(val);
         this.data[column.identifier] = val;
     }

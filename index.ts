@@ -19,13 +19,10 @@ order.addColumn('price', 'int', Random.number());
 
 const consign: Table = db.newTable('t_consignment');
 
-consign.addColumn('id', 'int', id.getNext('t_consignment.id'))
-    .addColumnReference('orderId', 'int', order.getColumn('id'))
-    .addColumn('price', 'int', Random.number());
+consign.addColumn('id', 'int', id.getNext('t_consignment.id'), 'consignment_id')
+    .addColumnReference('orderId', 'int', order.getColumn('id'),'order_id')
+    .addColumn('price', 'int', Random.number(),'order_total_price');
 
-
-db.addTable(order)
-    .addTable(consign);
 
 
 const queryBuilder: QueryBuilder = new QueryBuilder(db);
