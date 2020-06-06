@@ -3,6 +3,8 @@ import Column, { NamedColumn }  from './column';
 import DataRow from '../data/DataRow';
 import Value from './value';
 import Database from '../database';
+import Parser from './value/parser';
+import Exception from '../exceptions/exception';
 
 
 export class Table {
@@ -47,7 +49,7 @@ export class Table {
         return this.dataRow[this.dataRow.length-1];
     }
 
-    addColumn(name: string, type: string, valOrColumn: Column | any, columnName: string | undefined =  undefined): Table {
+    addColumn(identifier: string, type: string, valOrColumn: Column | any, columnName: string | undefined =  undefined): Table {
 
         let val = valOrColumn;
 
@@ -58,8 +60,18 @@ export class Table {
             }
         }
 
-        let col: Column = new Column(this, name, this.database.getParser(type), new Value(val), columnName);
-        this.columns[name] = col;
+        const parser: Parser = this.database.getParser(type);
+        
+        if(parser == null) {
+            let exc: Exception = new Exception('Invalid column type', `could not find parser for specified type`);
+            exc.prop(this.name, identifier, 'type');
+            exc.example(`Try to create a new parser or choose one of the pre-existent`);
+            exc.value(this.database.getParsersName().join(','), type);
+            exc.throw();
+        }
+
+        let col: Column = new Column(this, identifier, parser, new Value(val), columnName);
+        this.columns[identifier] = col;
         return this;
     }
 
