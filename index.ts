@@ -47,6 +47,11 @@ queryBuilder.insert('t_address', {});
 queryBuilder.insert('t_order', {});
 queryBuilder.insert('t_consignment', {});
 
+
+queryBuilder.insert('t_customer');
+queryBuilder.insert('t_customer');
+queryBuilder.insert('t_customer');
+
 queryBuilder.insert('t_order', {});
 queryBuilder.insert('t_order', {});
 queryBuilder.insert('t_consignment', {});

@@ -1,5 +1,5 @@
 
-export class Id{
+export class Id {
     protected ids: Map<string, number> = new Map<string, number>();
 
     constructor() {
@@ -13,7 +13,12 @@ export class Id{
         }
 
         let self: Id = this;
-        return () => {
+        return (previousVal: number) => {
+
+            if (previousVal != undefined) {
+                self.ids[idUniqueKey] = previousVal;
+            }
+
             self.ids[idUniqueKey] = self.ids[idUniqueKey] + 1;
             return self.ids[idUniqueKey];
         }

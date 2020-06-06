@@ -21,12 +21,6 @@ export class Database {
         return table;
     }
 
-    addTable(table: Table): Database {
-        table.database = this;
-        this.tables[table.name] = table;
-        return this;
-    }
-
     getTable(tableName: string) {
         return this.tables[tableName];
     }

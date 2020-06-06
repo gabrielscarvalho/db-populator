@@ -1,3 +1,4 @@
+import DataRow from "../data/DataRow";
 
 
 export class Value {
@@ -7,8 +8,8 @@ export class Value {
         this.fn = Value.prepare(val);
     }
 
-    get(): any {
-        return this.fn();
+    get(previousVal: any, previous: DataRow): any {
+        return this.fn(previousVal, previous);
     }
 
 
