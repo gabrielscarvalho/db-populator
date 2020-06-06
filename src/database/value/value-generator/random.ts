@@ -17,26 +17,26 @@ export class Random {
      * @example Random.fromList(['john','mary'], '::fixed-value::', ['other', 'list', 'to','apply','random'])
      * // will return 'mary::fixed-value::to'
     */
-    /*fromList() {
+    fromList(...args: any) {
 
         const variables = [];
-        for (const arg in arguments) {
+        for (const arg in args) {
             variables.push(arguments[arg]);
         }
 
         return () => {
             let result = '';
             variables.forEach(param => {
-                if (_.isArray(param)) {
+                if (Array.isArray(param)) {
                     result =  result + chance.pickone(param);
                 }
-                if (!_.isObject(param)) {
+                else {
                     result = result + param;
                 }
             });
             return result;
         }
-    }*/
+    }
 
 
     number({ min = 0, max = 10000, decimals = 0 }): Function {

@@ -2,80 +2,79 @@ import Database from './src/database';
 import Table from './src/database/table';
 import QueryBuilder from './src/query-builder';
 import Id from './src/database/value/value-generator/id';
+import Code from './src/database/value/value-generator/code';
 import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
 
 
 const id = new Id();
+const code = new Code();
 
 const db: Database = new Database();
 
 
 
 
-const customer: Table = db.newTable('t_customer')
-    .addColumn('id', 'int', id.getNext('t_customer.id'), 'customer_id')
+const customer = db.newTable('t_customer')
+    .addColumn('id', 'int', id.getNext('t_customer'))
     .addColumn('name', 'string', Random.name())
+    .addColumn('surname', 'string', Random.lastName())
     .addColumn('email', 'string', Random.email())
-    .addPrimaryKey('id');
+    .addColumn('birthDate', 'date', Random.date({ minYear: 1970, maxYear: 2010 }))
+    .addColumn('creation_date', 'datetime', Random.date({ minYear: 2018, maxYear: 2022 }));
 
+const address = db.newTable('t_address')
+    .addColumn('id', 'int', id.getNext('t_address'))
+    .addColumnReference('customer_id', 'int', customer.getColumn('id'))
+    .addColumn('street', 'string', Random.fromList(['St. Abc', 'St. Cde']))
+    .addColumn('number', 'int', Random.number({ min: 1, max: 150 }))
+    .addColumn('country', 'string', Random.fromList(['Brazil', 'United States']))
+    .addColumn('creation_date', 'datetime', Random.date({ minYear: 2018, maxYear: 2022 }))
+    .addColumn('is_main_address', 'bool', Random.fromList([true, false]));
+    
+const order = db.newTable('t_order')
+    .addColumn('id', 'int', id.getNext('t_order'))
+    .addColumn('order_code', 'string', code.getNext('orderCode-'))
+    .addColumnReference('customer_id', 'int', customer.getColumn('id'))
+    .addColumnReference('delivery_ad', 'int', address.getColumn('id'), 'delivery_address_id')
+    .addColumnReference('invoice_ad', 'int', address.getColumn('id'), 'invoice_address_id')
+    .addColumn('total_price', 'float', Random.number({ min: 200, max: 500, decimals: 2 }))
+    .addColumn('creation_date', 'datetime', Random.date({ minYear: 2018, maxYear: 2022 }))
+    .addColumn('status', 'string', 'PROCESSING');
 
-const address: Table = db.newTable('t_address')
-    .addColumn('id', 'int', id.getNext('t_address.id'), 'address_id')
-    .addColumnReference('customerId', 'int', customer.getColumn('id'), 'customer_id')
-    .addColumn('street', 'string', Random.string('str.'))
-    .addPrimaryKey('id');
+const order_item = db.newTable('t_order_item')
+    .addColumn('id', 'int', id.getNext('t_order_item'))
+    .addColumnReference('order_id', 'int', order.getColumn('id'))
+    .addColumnReference('order_code', 'string', order.getColumn('order_code'))
+    .addColumn('product_name', 'string', Random.fromList(['Iphone 11', 'Samsung VT 42', 'Notebook LG']))
+    .addColumn('total_price', 'float', Random.number({ min: 200, max: 500, decimals: 2 }))
+    .addColumn('discount_price', 'float', Random.number({ min: 10, max: 50, decimals: 2 }))
+    .addColumn('qty', 'int', Random.number({ min: 1, max: 3 }))
+    .addColumn('called_fn_date', 'raw', 'NOw()')
+    .addColumn('created_at', 'datetime', Random.dateWithSpecific({ year: 1998, day: 15, month: 3, hour: 20, minute: 42, seconds: 23 }));
 
-
-const order: Table = db.newTable('t_order')
-    .addColumn('id', 'int', id.getNext('t_order.id'), 'order_id')
-    .addColumnReference('customerId', 'int', customer.getColumn('id'), 'customer_id')
-    .addColumnReference('deliveryId', 'int', address.getColumn('id'), 'delivery_id')
-    .addColumn('price', 'int', Random.number({ min: 10, max: 200, decimals: 2}))
-    .addPrimaryKey('id');
-
-
-
-const consign: Table = db.newTable('t_consignment');
-
-consign.addColumn('id', 'int', id.getNext('t_consignment.id'), 'consignment_id')
-    .addColumnReference('orderId', 'int', order.getColumn('id'),'order_id')
-    .addColumn('price', 'int', Random.number({ min: 10, max: 200, decimals: 2}),'order_total_price')
-    .addPrimaryKey('id')
-    .addPrimaryKey('orderId');
 
 
 
 const queryBuilder: QueryBuilder = new QueryBuilder(db);
 
 
-const data: DataRow = queryBuilder.insert('t_customer', { name: 'Joao', id: 10});
+queryBuilder.insert('t_customer')
+const address1 : DataRow = queryBuilder.insert('t_address', { street: 'delivery address' });
+const address2 : DataRow = queryBuilder.insert('t_address', { street: 'invoice address' });
+queryBuilder.insert('t_order', { delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
+queryBuilder.insert('t_order_item', {})
+queryBuilder.insert('t_order_item', {})
 
-data.set('name', 'Maria');
-
-
-queryBuilder.insert('t_address', {});
-queryBuilder.insert('t_address', { customerId: (previous) => (previous.val + 10) });
-queryBuilder.insert('t_order', {});
-queryBuilder.insert('t_consignment', {});
-
-
-queryBuilder.insert('t_customer');
-queryBuilder.insert('t_customer');
-queryBuilder.insert('t_customer');
-
-queryBuilder.insert('t_order', {});
-queryBuilder.insert('t_order', {});
-queryBuilder.insert('t_consignment', {});
-
-queryBuilder.insert('t_order', {});
-queryBuilder.insert('t_consignment', {});
-queryBuilder.insert('t_consignment', {});
+queryBuilder.insert('t_order', { delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
+queryBuilder.insert('t_order_item', {})
+queryBuilder.insert('t_order_item', {})
+queryBuilder.insert('t_order_item', {})
 
 
 queryBuilder.print();
 
 
-queryBuilder.purge();
+//queryBuilder.purge();
 //result.data.id = 3;
 
