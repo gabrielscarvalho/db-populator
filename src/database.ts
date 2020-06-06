@@ -3,6 +3,7 @@ import Parser from './database/value/parser';
 import DefaultParsers from './database/value/parser/default-parsers';
 import Column from './database/column';
 import DatabaseConfig from './database/config';
+import Exception from './exceptions/exception';
 
 
 
@@ -19,13 +20,28 @@ export class Database {
 
 
     newTable(name: string) : Table {
+        
+        if(this.tables[name] != undefined) {
+            const exc: Exception = new Exception('table already exists');
+            exc.table(name);
+            exc.throw();
+        }
+
         const table: Table = new Table(this, name);
         this.tables[name] = table;
         return table;
     }
 
+
     getTable(tableName: string) {
-        return this.tables[tableName];
+        const table: Table = this.tables[tableName];
+
+        if(table == undefined) {
+            const exc: Exception = new Exception('table not found.');
+            exc.table(name);
+            exc.throw();
+        }
+        return table;
     }
 
 

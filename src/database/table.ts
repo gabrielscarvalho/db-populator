@@ -1,5 +1,5 @@
 
-import Column, { NamedColumn }  from './column';
+import Column, { NamedColumn } from './column';
 import DataRow from '../data/DataRow';
 import Value from './value';
 import Database from '../database';
@@ -17,16 +17,16 @@ export class Table {
 
     }
 
-    setDatabase(database: Database){
+    setDatabase(database: Database) {
         this.database = database;
     }
 
 
-    getColumns(): Column[]{
+    getColumns(): Column[] {
         let columns: Column[] = [];
         let name: string;
 
-        for(name in this.columns) {
+        for (name in this.columns) {
             let column: Column = this.columns[name];
             columns.push(column);
         }
@@ -35,34 +35,40 @@ export class Table {
     }
 
 
-    addPrimaryKey(columnName: string) : Table {
+    addPrimaryKey(columnName: string): Table {
         this.getColumn(columnName).setPrimaryKey(true);
         return this;
     }
 
 
-    addDataRow(dataRow: DataRow){
+    addDataRow(dataRow: DataRow) {
         this.dataRow.push(dataRow);
     }
 
-    getLastDataRow(): DataRow{
-        return this.dataRow[this.dataRow.length-1];
+    getLastDataRow(): DataRow {
+        return this.dataRow[this.dataRow.length - 1];
     }
 
-    addColumn(identifier: string, type: string, valOrColumn: Column | any, columnName: string | undefined =  undefined): Table {
+    addColumn(identifier: string, type: string, valOrColumn: Column | any, columnName: string | undefined = undefined): Table {
 
         let val = valOrColumn;
 
-        if(valOrColumn instanceof Column) {
+        if (this.getColumn(identifier) != null) {
+            let exc: Exception = new Exception('Duplicated column identifier', `the column '${identifier}' is already taken.`);
+            exc.column(this.name, identifier);
+            exc.throw();
+        }
+
+        if (valOrColumn instanceof Column) {
             val = () => {
                 const dataRow: DataRow = valOrColumn.table.getLastDataRow();
-                return dataRow.getData(valOrColumn.identifier);  
+                return dataRow.getData(valOrColumn.identifier);
             }
         }
 
         const parser: Parser = this.database.getParser(type);
-        
-        if(parser == null) {
+
+        if (parser == null) {
             let exc: Exception = new Exception('Invalid column type', `could not find parser for specified type`);
             exc.prop(this.name, identifier, 'type');
             exc.example(`Try to create a new parser or choose one of the pre-existent`);
@@ -75,8 +81,8 @@ export class Table {
         return this;
     }
 
-    getColumn(name: string): Column {
-        return this.columns[name];
+    getColumn(identifier: string): Column {
+        return this.columns[identifier];
     }
 
     protected getName(): string {
