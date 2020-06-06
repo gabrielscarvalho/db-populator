@@ -47,20 +47,17 @@ export class Table {
         return this.dataRow[this.dataRow.length-1];
     }
 
+    addColumn(name: string, type: string, valOrColumn: Column | any, columnName: string | undefined =  undefined): Table {
 
-    addColumnReference(name: string, type: string, reference: Column, columnName: string | undefined = undefined): Table {
+        let val = valOrColumn;
 
-        let val = () => {
-            const dataRow: DataRow = reference.table.getLastDataRow();
-            return dataRow.getData(reference.identifier);  
+        if(valOrColumn instanceof Column) {
+            val = () => {
+                const dataRow: DataRow = valOrColumn.table.getLastDataRow();
+                return dataRow.getData(valOrColumn.identifier);  
+            }
         }
 
-        let col: Column = new Column(this, name, this.database.getParser(type), new Value(val), columnName);
-        this.columns[name] = col;
-        return this;
-    }
-
-    addColumn(name: string, type: string, val: any, columnName: string | undefined =  undefined): Table {
         let col: Column = new Column(this, name, this.database.getParser(type), new Value(val), columnName);
         this.columns[name] = col;
         return this;
