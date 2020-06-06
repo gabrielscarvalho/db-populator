@@ -26,6 +26,13 @@ export class DataRow {
         this.values[column.identifier] = colValue;
     }
 
+
+    set(columnIdentifier: string, val: any) {
+        this.data[columnIdentifier] = val;
+        const dataRowCol: DataRowCol = this.values[columnIdentifier];
+        dataRowCol.setValue(val);
+    }
+
     getDataCol(column: Column): DataRowCol {
         return this.values[column.identifier];
     }

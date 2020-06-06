@@ -17,6 +17,10 @@ class DataRowCol {
         this.parsedVal = column.parser.parse(val);
     }
 
+
+    setValue(val: any){
+        this.parsedVal = this.column.parser.parse(val);
+    }
 }
 
 export default DataRowCol;

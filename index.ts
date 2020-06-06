@@ -17,6 +17,7 @@ const customer: Table = db.newTable('t_customer')
     .addColumn('name', 'string', Random.name())
     .addColumn('email', 'string', Random.number());
 
+
 const address: Table = db.newTable('t_address')
     .addColumn('id', 'int', id.getNext('t_address.id'), 'address_id')
     .addColumnReference('customerId', 'int', customer.getColumn('id'), 'customer_id')
@@ -41,7 +42,11 @@ consign.addColumn('id', 'int', id.getNext('t_consignment.id'), 'consignment_id')
 const queryBuilder: QueryBuilder = new QueryBuilder(db);
 
 
-queryBuilder.insert('t_customer', { name: 'Joao', id: 10});
+const data: DataRow = queryBuilder.insert('t_customer', { name: 'Joao', id: 10});
+
+data.set('name', 'Maria');
+
+
 queryBuilder.insert('t_address', {});
 queryBuilder.insert('t_address', { customerId: (previous) => (previous.val + 10) });
 queryBuilder.insert('t_order', {});
