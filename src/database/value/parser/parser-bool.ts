@@ -1,6 +1,6 @@
 import Parser from "../parser";
 import {ParserRaw} from "./parser-raw";
-
+import _ from 'lodash';
 
 export class ParserBool extends ParserRaw implements Parser {
 

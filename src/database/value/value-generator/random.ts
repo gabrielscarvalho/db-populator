@@ -1,10 +1,11 @@
 import Chance from 'chance';
-//import _ from 'lodash';
-
+import _ from 'lodash';
 
 const chance = new Chance();
 
 export class Random {
+
+
 
     string(prefix, length = 5) : Function {
         return () => prefix + '' + chance.string({ length, alpha: true  });
@@ -27,7 +28,7 @@ export class Random {
         return () => {
             let result = '';
             variables.forEach(param => {
-                if (Array.isArray(param)) {
+                if (_.isArray(param)) {
                     result =  result + chance.pickone(param);
                 }
                 else {
