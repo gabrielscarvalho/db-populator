@@ -18,7 +18,7 @@ export class QueryBuilder {
     }
 
 
-    insert(tableName: string, extraData: object = {}): DataRow {
+    insert(tableName: string, extraData: object = {} ): DataRow {
 
         const table: Table = this.database.getTable(tableName);
         const dataRow : DataRow = new DataGenerator(table, QueryCommand.INSERT).execute(extraData);

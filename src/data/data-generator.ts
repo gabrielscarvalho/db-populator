@@ -2,23 +2,27 @@ import Table from "../database/table";
 import DataRow from "./DataRow";
 import QueryCommand from "../query/query-command";
 import Column, { NamedColumn } from "../database/column";
+import { stringify } from "querystring";
 
 export class DataGenerator {
 
-    constructor(protected table: Table, public queryCommand: QueryCommand){
+    constructor(protected table: Table, public queryCommand: QueryCommand) {
 
     }
 
     execute(extraData: object = {}): DataRow {
 
-        const dataRow : DataRow = new DataRow(this.table, this.queryCommand);
-
+        const dataRow: DataRow = new DataRow(this.table, this.queryCommand);
 
         let column: Column;
-        this.table.getColumns().forEach(column => {
+        this.table.getColumns().forEach(column => {            
+            let val: any;
 
-            let val: any = column.val.get();
-
+            if (extraData[column.identifier]) {
+                val = extraData[column.identifier];
+            } else {
+                val = column.val.get();
+            }
             dataRow.addData(column, val);
         });
 

@@ -2,7 +2,11 @@
 export class Random {
 
     number(): Function {
-        return () => (2);
+        return () => (2.432);
+    }
+
+    name(): Function{
+        return () => ('John');
     }
 }
 
