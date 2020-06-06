@@ -1,3 +1,4 @@
+import DataRowCol from "../../../data/data-row-col";
 
 export class Id {
     protected ids: Map<string, number> = new Map<string, number>();
@@ -13,10 +14,10 @@ export class Id {
         }
 
         let self: Id = this;
-        return (previousVal: number) => {
+        return (previousVal: DataRowCol) => {
 
             if (previousVal != undefined) {
-                self.ids[idUniqueKey] = previousVal;
+                self.ids[idUniqueKey] = previousVal.val;
             }
 
             self.ids[idUniqueKey] = self.ids[idUniqueKey] + 1;

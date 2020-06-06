@@ -17,19 +17,19 @@ export class DataGenerator {
 
         let column: Column;
 
-        const previousDataRow = this.table.getLastDataRow();
+
 
 
         this.table.getColumns().forEach(column => {            
             let val: any;
 
-            let previousVal : any = previousDataRow ? previousDataRow.getData(column.identifier): undefined;
+            let previousVal : DataRowCol = this.getPreviousDataRowCol(dataRow, column);
 
 
             if (extraData[column.identifier]) {
                 val = extraData[column.identifier];
             } else {
-                val = column.val.get(previousVal, previousDataRow);
+                val = column.val.get(previousVal);
             }
             dataRow.addData(column, val);
         });
@@ -39,7 +39,13 @@ export class DataGenerator {
     }
 
 
-
+    protected getPreviousDataRowCol(dataRow: DataRow, column: Column): DataRowCol {
+        const previousDataRow = this.table.getLastDataRow();
+        if(previousDataRow != undefined) {
+            return previousDataRow.getDataCol(column);
+        }
+        return undefined;
+    }
 }
 
 export default DataGenerator;
