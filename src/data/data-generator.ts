@@ -4,6 +4,7 @@ import QueryCommand from "../query/query-command";
 import Column, { NamedColumn } from "../database/column";
 import { stringify } from "querystring";
 import DataRowCol from "./data-row-col";
+import Value from "../database/value";
 
 export class DataGenerator {
 
@@ -15,19 +16,13 @@ export class DataGenerator {
 
         const dataRow: DataRow = new DataRow(this.table, this.queryCommand);
 
-        let column: Column;
-
-
-
-
         this.table.getColumns().forEach(column => {            
             let val: any;
 
             let previousVal : DataRowCol = this.getPreviousDataRowCol(dataRow, column);
 
-
             if (extraData[column.identifier]) {
-                val = extraData[column.identifier];
+                val = new Value(extraData[column.identifier]).get(previousVal);
             } else {
                 val = column.val.get(previousVal);
             }

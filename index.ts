@@ -43,7 +43,7 @@ const queryBuilder: QueryBuilder = new QueryBuilder(db);
 
 queryBuilder.insert('t_customer', { name: 'Joao', id: 10});
 queryBuilder.insert('t_address', {});
-queryBuilder.insert('t_address', {});
+queryBuilder.insert('t_address', { customerId: (previous) => (previous.val + 10) });
 queryBuilder.insert('t_order', {});
 queryBuilder.insert('t_consignment', {});
 
