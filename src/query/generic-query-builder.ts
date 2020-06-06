@@ -70,7 +70,7 @@ export class GenericQueryBuilder implements IQueryBuilder {
             throw new Error(`Table: [${dataRow.table.name}] does not have any primary key`);
         }
 
-        let SQL: string = `DELETE FROM ${dataRow.table.name}  WHERE ${where.join(' AND ')};`;
+        let SQL: string = `DELETE FROM ${dataRow.table.name} WHERE ${where.join(' AND ')};`;
         return SQL;
     }
 
