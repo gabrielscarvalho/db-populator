@@ -18,6 +18,7 @@ export class DataRow {
 
     }
 
+
     addData(column: Column, val: any) {
         this.data[column.identifier] = val;
 
@@ -51,6 +52,13 @@ export class DataRow {
             queryData[columnName] = dataRowCol.parsedVal;
         }
         return queryData;
+    }
+
+    clone() : DataRow{
+        const dataRow: DataRow = new DataRow(this.table, this.command);
+        dataRow.data = this.data;
+        dataRow.values = this.values;
+        return dataRow;
     }
 }
 

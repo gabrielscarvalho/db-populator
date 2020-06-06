@@ -9,7 +9,8 @@ export class Table {
 
     protected columns: Map<string, Column> = new Map<string, Column>();
     protected dataRow: DataRow[] = [];
-    
+
+
     constructor(public database: Database, public name: string) {
 
     }
@@ -29,6 +30,12 @@ export class Table {
         }
 
         return columns;
+    }
+
+
+    addPrimaryKey(columnName: string) : Table {
+        this.getColumn(columnName).setPrimaryKey(true);
+        return this;
     }
 
 

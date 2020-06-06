@@ -18,20 +18,38 @@ export class QueryBuilder {
     }
 
 
-    insert(tableName: string, extraData: object = {} ): DataRow {
+    insert(tableName: string, extraData: object = {}): DataRow {
 
         const table: Table = this.database.getTable(tableName);
-        const dataRow : DataRow = new DataGenerator(table, QueryCommand.INSERT).execute(extraData);
+        const dataRow: DataRow = new DataGenerator(table, QueryCommand.INSERT).execute(extraData);
         this.dataRows.push(dataRow);
 
         return dataRow;
     }
 
 
-    print() : string {
+    print(): string {
         console.log('sqls: %o', this.queryBuilder.toSQL(this.dataRows));
         return 'sqls';
     }
+
+
+    purge() {
+
+        const deletes: DataRow[] = [];
+
+        this.dataRows.forEach(dataRow => {
+
+            if (dataRow.command == QueryCommand.INSERT) {
+                const deleteRow: DataRow = dataRow.clone();
+                deleteRow.command = QueryCommand.DELETE;
+                deletes.push(deleteRow);
+            }
+        });
+
+        console.log('sqls: %o', this.queryBuilder.toSQL(deletes.reverse()));
+    }
+
 }
 
 

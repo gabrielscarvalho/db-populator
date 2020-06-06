@@ -6,7 +6,7 @@ import Parser from './value/parser';
 export class Column {
 
     public type: string;
-
+    public isPrimary: boolean = false;
     constructor(
         public table: Table,
         public identifier: string,
@@ -20,6 +20,12 @@ export class Column {
             this.name = this.identifier;
         }
     }
+
+
+    setPrimaryKey(isPrimary: boolean) {
+        this.isPrimary = isPrimary;
+    }
+
 }
 export type NamedColumn = [string, Column];
 
