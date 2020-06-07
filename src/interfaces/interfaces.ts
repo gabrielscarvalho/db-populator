@@ -69,6 +69,9 @@ export interface iTable {
      */
     iDataRows: iDataRow[];
 
+
+    constructor(database: iDatabase, name: string);
+
     /**
      * Adds a new column.
      * @param identifier {string} an easy identifier to name this column or its real column name

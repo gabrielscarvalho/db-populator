@@ -3,9 +3,10 @@ import Table from './table';
 import Parser from './value/parser';
 import DataRowCol from '../data/data-row-col';
 import DataRow from '../data/DataRow';
+import { iColumn } from '../interfaces/interfaces';
 
 
-export class Column {
+export class Column implements iColumn {
 
     public type: string;
     public isPrimary: boolean = false;

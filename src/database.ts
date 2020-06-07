@@ -1,15 +1,15 @@
 import Table from './database/table';
 import Parser from './database/value/parser';
 import DefaultParsers from './database/value/parser/default-parsers';
-import Column from './database/column';
 import DatabaseConfig from './database/config';
 import Exception from './exceptions/exception';
+import { iDatabase, iTable } from './interfaces/interfaces';
 
 
 
-export class Database {
+export class Database implements iDatabase {
 
-    protected tables: Map<string, Table> = new Map<string, Table>();
+    protected tables: Map<string, iTable> = new Map<string, Table>();
     protected parsers: Map<string, Parser> = new Map<string, Parser>();
     public config: DatabaseConfig;
 
@@ -19,7 +19,7 @@ export class Database {
     }
 
 
-    newTable(name: string) : Table {
+    newTable(name: string) : iTable {
         
         if(this.tables[name] != undefined) {
             const exc: Exception = new Exception('table already exists');
