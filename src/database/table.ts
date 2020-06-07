@@ -5,11 +5,12 @@ import Value from './value';
 import Database from '../database';
 import Parser from './value/parser';
 import Exception from '../exceptions/exception';
+import NamedMap from '../commons/named-map';
 
 
 export class Table {
 
-    protected columns: Map<string, Column> = new Map<string, Column>();
+    protected columns: NamedMap<Column> = new NamedMap<Column>(false);    
     protected dataRow: DataRow[] = [];
 
 
@@ -23,15 +24,7 @@ export class Table {
 
 
     getColumns(): Column[] {
-        let columns: Column[] = [];
-        let name: string;
-
-        for (name in this.columns) {
-            let column: Column = this.columns[name];
-            columns.push(column);
-        }
-
-        return columns;
+        return this.columns.values();
     }
 
 
@@ -95,34 +88,18 @@ export class Table {
         }
 
         let col: Column = new Column(this, identifier, parser, new Value(val), columnName);
-        this.columns[identifier] = col;
+        this.columns.put(identifier, col);
         return this;
     }
 
 
 
     public getColumn(identifier: string, throwIfNotFound: boolean = true): Column {
-        const column: Column = this.columns[identifier];
-
-        if (column == undefined && throwIfNotFound) {
-            let columnIds: string = this.getColumnIds().join(',');
-            let exc: Exception = new Exception('Unknown column', `could not find the column '${identifier}'`);
-            exc.column(this.name, identifier);
-            exc.value(columnIds, identifier);
-            exc.example(`table.getColumn('one-of-the-list');`)
-            exc.throw();
-        }
-
-        return column;
+        return this.columns.get(identifier, throwIfNotFound);
     }
 
     protected getColumnIds(): string[] {
-        let ids: string[] = [];
-        let id: string;
-        for (id in this.columns) {
-            ids.push(id);
-        }
-        return ids;
+        return this.columns.names();
     }
 
     protected getColumnByName(columnName: string): Column {
