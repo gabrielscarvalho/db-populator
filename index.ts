@@ -4,7 +4,7 @@ import Id from './src/database/value/value-generator/id';
 import Code from './src/database/value/value-generator/code';
 import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
-import { DateBiggerThanLast, date } from './src/database/value/value-generator/date';
+import { DateIncrement, date } from './src/database/value/value-generator/date';
 import DatabaseConfig from './src/database/config';
 
 const id = new Id();
@@ -38,7 +38,7 @@ const address = db.newTable('t_address')
 
 const order = db.newTable('t_order')
     .addColumn('id', 'int', id.getNext('t_order'))
-    .addColumn('orderCode', 'string', code.getNext('orderCode-'))
+    .addColumn('orderCode', 'string', code.getNext('orderCode-'), 'order_code')
     .addColumn('customer_id', 'int', customer.getColumn('id'))
     .addColumn('delivery_ad', 'int', address.getColumn('id'), 'delivery_address_id')
     .addColumn('invoice_ad', 'int', address.getColumn('id'), 'invoice_address_id')
@@ -49,7 +49,7 @@ const order = db.newTable('t_order')
 
 const orderItem = db.newTable('t_order_item')
     .addColumn('id', 'int', id.getNext('t_order_item'))
-    .addColumn('freshierDate', 'date', DateBiggerThanLast(date('2010-03-05'), 5))
+    .addColumn('freshierDate', 'date', DateIncrement(date('2010-03-05'), 5))
     .addColumn('order_id', 'int', order.getColumn('id'))
     .addColumn('order_code', 'string', order.getColumn('orderCode'))
     .addColumn('product_name', 'string', Random.fromList(['Iphone 11', 'Samsung VT 42', 'Notebook LG']))
@@ -69,14 +69,14 @@ const queryBuilder: QueryBuilder = new QueryBuilder(db);
 queryBuilder.insert('t_customer')
 const address1: DataRow = queryBuilder.insert('t_address', { street: 'delivery address' });
 const address2: DataRow = queryBuilder.insert('t_address', { street: 'invoice address' });
-queryBuilder.insert('t_order', { orderCode: 'ESSE AQUI MESMO', delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
+queryBuilder.insert('t_order', { delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
 queryBuilder.insert('t_order_item', {})
 queryBuilder.insert('t_order_item', {})
 
 queryBuilder.insert('t_order', { delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
 queryBuilder.insert('t_order_item', {})
 let item2: DataRow = queryBuilder.insert('t_order_item', {})
-queryBuilder.insert('t_order_item', {freshierDate: DateBiggerThanLast(item2.getData('freshierDate'), 30)})
+queryBuilder.insert('t_order_item')
 
 
 queryBuilder.print();

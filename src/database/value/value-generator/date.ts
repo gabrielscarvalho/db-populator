@@ -2,7 +2,7 @@ import DataRowCol from "../../../data/data-row-col";
 import moment from 'moment';
 import Exception from "../../../exceptions/exception";
 
-export const DateBiggerThanLast: Function = (initialDate: Date, amountOfDays: number) => {
+export const DateIncrement: Function = (initialDate: Date, amountOfDays: number) => {
 
     return (lastDate: DataRowCol) => {
 

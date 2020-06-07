@@ -1,9 +1,7 @@
 import Table from './database/table';
 import Parser from './database/value/parser';
 import DefaultParsers from './database/value/parser/default-parsers';
-import Column from './database/column';
 import DatabaseConfig from './database/config';
-import Exception from './exceptions/exception';
 import NamedMap from './commons/named-map';
 
 
