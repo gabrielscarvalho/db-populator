@@ -5,12 +5,15 @@ import Code from './src/database/value/value-generator/code';
 import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
 import { DateBiggerThanLast, date } from './src/database/value/value-generator/date';
-import Column from './src/database/column';
+import DatabaseConfig from './src/database/config';
 
 const id = new Id();
 const code = new Code();
 
-const db: Database = new Database();
+
+const config: DatabaseConfig = new DatabaseConfig();
+
+const db: Database = new Database(config);
 
 
 const customer = db.newTable('t_customer')

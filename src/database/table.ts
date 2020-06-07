@@ -83,7 +83,7 @@ export class Table {
             let exc: Exception = new Exception('Invalid column type', `could not find parser for specified type`);
             exc.prop(this.name, identifier, 'type');
             exc.example(`Try to create a new parser or choose one of the pre-existent`);
-            exc.value(this.database.getParsersName().join(','), type);
+            exc.value(this.database.getParsersType().join(','), type);
             exc.throw();
         }
 

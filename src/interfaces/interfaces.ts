@@ -1,4 +1,5 @@
 import QueryCommand from "../query/query-command";
+import NamedMap from "../commons/named-map";
 
 
 /** 
@@ -8,12 +9,12 @@ export interface iDatabase {
     /**
      * A list of all tables inserted, kept by 'table_name' => iTable
      */
-    tables: Map<string, iTable>;
+    tables: NamedMap<iTable>;
 
     /**
      * A list of all parsers inserted, kept by 'parser_type' => iParser
      */
-    parsers: Map<string, iParser>;
+    parsers: NamedMap<iParser>;
 
     /**
      * Creates a new table.
@@ -63,7 +64,7 @@ export interface iTable {
      * Keep all the columns of this table.
      * Format: <column.id, iColumn>
      */
-    columns: Map<string, iColumn>
+    columns: NamedMap<iColumn>
     /**
      * Keeps all registers inserted at this table.
      */

@@ -8,7 +8,10 @@ export class ParserString extends ParserRaw implements Parser {
 
 
     parse(val: any): string {
-        return this.addQuotes(String(val));
+        if(val != null && val != undefined){ 
+            return this.addQuotes(String(val));
+        }
+        return this.getNullString();
     }
 }
 

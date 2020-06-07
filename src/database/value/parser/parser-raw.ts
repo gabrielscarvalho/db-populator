@@ -1,21 +1,28 @@
 import Parser from "../parser";
+import { ParserConfig } from "../../config";
 
 
 export class ParserRaw implements Parser {
 
     type: string = 'raw';
-    
-    constructor(){
-        
-    }
+    config: ParserConfig;
 
+    setConfig(config: ParserConfig): ParserRaw {
+        this.config = config;
+        return this;
+    }
 
     parse(val: any): string {
         return String(val);
     }
 
     addQuotes(val: string): string {
-        return `'${val}'`;
+        const quote = this.config.QUOTE_CHAR;
+        return `${quote}${val}${quote}`;
+    }
+
+    getNullString(): string {
+        return this.config.NULL_TEXT;
     }
 }
 

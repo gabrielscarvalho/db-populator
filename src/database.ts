@@ -12,11 +12,10 @@ export class Database {
 
     protected tables: NamedMap<Table> = new NamedMap<Table>(false);
     protected parsers: NamedMap<Parser> = new NamedMap<Parser>(true);
-    public config: DatabaseConfig;
 
-    constructor() {
+    constructor(protected config: DatabaseConfig) {
         this.config = new DatabaseConfig();
-        this.parsers = DefaultParsers.get();
+        this.parsers = DefaultParsers.get(this.config.parserConfig);
     }
 
 
@@ -37,12 +36,12 @@ export class Database {
     }
 
 
-    getParsersName() {
+    getParsersType() {
         return this.parsers.getAllProp('type');
     }
 
     addParser(type: string, parser: Parser): Database {
-        this.parsers.put(type, parser);
+        this.parsers.put(type, parser.setConfig(this.config.parserConfig));
         return this;
     }
 }
