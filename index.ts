@@ -30,7 +30,7 @@ const address = db.newTable('t_address')
     .addColumn('country', 'string', Random.fromList(['Brazil', 'United States']))
     .addColumn('creation_date', 'datetime', Random.date({ minYear: 2018, maxYear: 2022 }))
     .addColumn('is_main_address', 'bool', Random.fromList([true, false]))
-    .addPrimaryKey('id');;
+    .addPrimaryKey('id');
 
 const order = db.newTable('t_order')
     .addColumn('id', 'int', id.getNext('t_order'))
@@ -62,9 +62,9 @@ const queryBuilder: QueryBuilder = new QueryBuilder(db);
 
 
 queryBuilder.insert('t_customer')
-const address1 : DataRow = queryBuilder.insert('t_address', { street: 'delivery address' });
-const address2 : DataRow = queryBuilder.insert('t_address', { street: 'invoice address' });
-queryBuilder.insert('t_order', {orderCode: 'ESSE AQUI MESMO',   delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
+const address1: DataRow = queryBuilder.insert('t_address', { street: 'delivery address' });
+const address2: DataRow = queryBuilder.insert('t_address', { street: 'invoice address' });
+queryBuilder.insert('t_order', { orderCode: 'ESSE AQUI MESMO', delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
 queryBuilder.insert('t_order_item', {})
 queryBuilder.insert('t_order_item', {})
 

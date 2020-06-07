@@ -35,8 +35,17 @@ export class Table {
     }
 
 
-    addPrimaryKey(columnName: string): Table {
-        this.getColumn(columnName).setPrimaryKey(true);
+    addPrimaryKey(identifier: string): Table {
+        
+        if(this.getColumnIds().indexOf(identifier) < 0) {
+            let exc: Exception = new Exception('Invalid column identifier', `the column [${identifier}] was not found.`);
+            exc.column(this.name, identifier);
+            exc.value(this.getColumnIds().join(','), identifier);
+            exc.example(`table.addPrimaryKey('one-of-the-list');`)
+            exc.throw();
+        }
+
+        this.getColumn(identifier).setPrimaryKey(true);
         return this;
     }
 
