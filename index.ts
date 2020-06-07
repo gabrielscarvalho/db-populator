@@ -13,13 +13,14 @@ const db: Database = new Database();
 
 
 const customer = db.newTable('t_customer')
-    .addColumn('id', 'int', id.getNext('t_customer'))
-    .addColumn('name', 'string', Random.name())
+    .addColumn('id', 'int', id.getNext('t_customer'), 'id')
+    .addColumn('name', 'string', Random.name(), 'name')
     .addColumn('surname', 'string', Random.lastName())
     .addColumn('email', 'string', Random.email())
     .addColumn('birthDate', 'date', Random.date({ minYear: 1970, maxYear: 2010 }))
     .addColumn('creation_date', 'datetime', Random.date({ minYear: 2018, maxYear: 2022 }))
     .addPrimaryKey('id');
+
 
 const address = db.newTable('t_address')
     .addColumn('id', 'int', id.getNext('t_address'))

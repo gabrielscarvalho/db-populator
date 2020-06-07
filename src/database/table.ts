@@ -53,9 +53,17 @@ export class Table {
 
         let val = valOrColumn;
 
-        if (this.getColumn(identifier) != null) {
-            let exc: Exception = new Exception('Duplicated column identifier', `the column '${identifier}' is already taken.`);
+        if (this.getColumn(identifier, false) != null) {
+            let exc: Exception = new Exception('Duplicated column identifier', `the column [${identifier}] is already taken.`);
             exc.column(this.name, identifier);
+            exc.example(`table.addColumn('column-id' <---, 'value', 'column-name');`)
+            exc.throw();
+        }
+
+        if (columnName != undefined && this.getColumnByName(columnName) != null) {
+            let exc: Exception = new Exception('Duplicated column name', `the column name: [${columnName}] is already taken.`);
+            exc.prop(this.name, identifier, 'columnName');
+            exc.example(`table.addColumn('column-id', 'value', 'column-name' <---);`)
             exc.throw();
         }
 
@@ -81,11 +89,45 @@ export class Table {
         return this;
     }
 
-    getColumn(identifier: string): Column {
-        return this.columns[identifier];
+
+
+    public getColumn(identifier: string, throwIfNotFound: boolean = true): Column {
+        const column: Column = this.columns[identifier];
+
+        if (column == undefined && throwIfNotFound) {
+            let columnIds: string = this.getColumnIds().join(',');
+            let exc: Exception = new Exception('Unknown column', `could not find the column '${identifier}'`);
+            exc.column(this.name, identifier);
+            exc.value(columnIds, identifier);
+            exc.example(`table.getColumn('one-of-the-list');`)
+            exc.throw();
+        }
+
+        return column;
     }
 
-    protected getName(): string {
+    protected getColumnIds(): string[] {
+        let ids: string[] = [];
+        let id: string;
+        for (id in this.columns) {
+            ids.push(id);
+        }
+        return ids;
+    }
+
+    protected getColumnByName(columnName: string): Column {
+        let found: Column = null;
+        let name: string;
+
+        for (name in this.columns) {
+            if (columnName == name) {
+                found = this.columns[name];
+            }
+        }
+        return found;
+    }
+
+    public getName(): string {
         return this.name;
     }
 }
