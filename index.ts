@@ -5,6 +5,7 @@ import Code from './src/database/value/value-generator/code';
 import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
 import { DateBiggerThanLast, date } from './src/database/value/value-generator/date';
+import Column from './src/database/column';
 
 const id = new Id();
 const code = new Code();
@@ -13,10 +14,10 @@ const db: Database = new Database();
 
 
 const customer = db.newTable('t_customer')
-    .addColumn('id', 'int', id.getNext('t_customer'), 'id')
-    .addColumn('name', 'string', Random.name(), 'name')
-    .addColumn('surname', 'string', Random.lastName())
-    .addColumn('email', 'string', Random.email())
+    .addColumn('id', 'int', id.getNext('t_customer'), 'customer_id')
+    .addColumn('name', 'string', Random.name(), 'customer_name')
+    .addColumn('surname', 'string', Random.lastName(), 'customer_surname')
+    .addColumn('email', 'string', Random.email(), 'customer_email')
     .addColumn('birthDate', 'date', Random.date({ minYear: 1970, maxYear: 2010 }))
     .addColumn('creation_date', 'datetime', Random.date({ minYear: 2018, maxYear: 2022 }))
     .addPrimaryKey('id');

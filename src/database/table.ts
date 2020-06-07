@@ -10,7 +10,7 @@ import NamedMap from '../commons/named-map';
 
 export class Table {
 
-    protected columns: NamedMap<Column> = new NamedMap<Column>(false);    
+    public columns: NamedMap<Column> = new NamedMap<Column>(false);
     protected dataRow: DataRow[] = [];
 
 
@@ -29,11 +29,11 @@ export class Table {
 
 
     addPrimaryKey(identifier: string): Table {
-        
-        if(this.getColumnIds().indexOf(identifier) < 0) {
+
+        if (this.columns.searchByProp('identifier', identifier) == null) {
             let exc: Exception = new Exception('Invalid column identifier', `the column [${identifier}] was not found.`);
             exc.column(this.name, identifier);
-            exc.value(this.getColumnIds().join(','), identifier);
+            exc.value(this.columns.getAllProp('identifier').join(','), identifier);
             exc.example(`table.addPrimaryKey('one-of-the-list');`)
             exc.throw();
         }
@@ -56,14 +56,14 @@ export class Table {
 
         let val = valOrColumn;
 
-        if (this.getColumn(identifier, false) != null) {
+        if (this.columns.has(identifier)) {
             let exc: Exception = new Exception('Duplicated column identifier', `the column [${identifier}] is already taken.`);
             exc.column(this.name, identifier);
             exc.example(`table.addColumn('column-id' <---, 'value', 'column-name');`)
             exc.throw();
         }
 
-        if (columnName != undefined && this.getColumnByName(columnName) != null) {
+        if (columnName != undefined && this.columns.searchByProp('name', columnName) != null) {
             let exc: Exception = new Exception('Duplicated column name', `the column name: [${columnName}] is already taken.`);
             exc.prop(this.name, identifier, 'columnName');
             exc.example(`table.addColumn('column-id', 'value', 'column-name' <---);`)
@@ -92,31 +92,10 @@ export class Table {
         return this;
     }
 
-
-
     public getColumn(identifier: string, throwIfNotFound: boolean = true): Column {
         return this.columns.get(identifier, throwIfNotFound);
     }
 
-    protected getColumnIds(): string[] {
-        return this.columns.names();
-    }
-
-    protected getColumnByName(columnName: string): Column {
-        let found: Column = null;
-        let name: string;
-
-        for (name in this.columns) {
-            if (columnName == name) {
-                found = this.columns[name];
-            }
-        }
-        return found;
-    }
-
-    public getName(): string {
-        return this.name;
-    }
 }
 
 export default Table;

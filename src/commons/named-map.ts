@@ -4,12 +4,12 @@
 class NamedMap<T> {
     protected data: Map<string, T> = new Map<string, T>();
 
-    constructor(protected allowReplace: boolean = true){
+    constructor(protected allowReplace: boolean = true) {
 
     }
 
     put(key: string, val: T) {
-        if(this.has(key) && !this.allowReplace) {
+        if (this.has(key) && !this.allowReplace) {
             throw new Error(`Key: [${key}] was already taken`);
         }
         this.data.set(key, val);
@@ -28,7 +28,7 @@ class NamedMap<T> {
             throw new Error(`could not find the data: [${key}]`);
         }
     }
-    
+
     values(): T[] {
 
         let values: T[] = [];
@@ -42,12 +42,34 @@ class NamedMap<T> {
 
     names(): string[] {
         let names: string[] = [];
-        
+
         this.data.forEach((val, name) => {
             names.push(name);
         });
 
         return names;
+    }
+
+
+    getAllProp(prop: string): any[] {
+        let propData: any[] = [];
+
+        this.data.forEach((val) => {
+            propData.push(val[prop]);
+        });
+
+        return propData;
+    }
+
+
+    searchByProp(prop: string, searchValue: any): T {
+        let value: T;
+        for (value of this.values()) {
+            if (value[prop] == searchValue) {
+                return value;
+            }
+        }
+        return null;
     }
 }
 
