@@ -27,6 +27,7 @@ class NamedMap<T> {
         if (throwErrorIfNotFound) {
             throw new Error(`could not find the data: [${key}]`);
         }
+        return null;
     }
 
     values(): T[] {

@@ -4,13 +4,14 @@ import DefaultParsers from './database/value/parser/default-parsers';
 import Column from './database/column';
 import DatabaseConfig from './database/config';
 import Exception from './exceptions/exception';
+import NamedMap from './commons/named-map';
 
 
 
 export class Database {
 
-    protected tables: Map<string, Table> = new Map<string, Table>();
-    protected parsers: Map<string, Parser> = new Map<string, Parser>();
+    protected tables: NamedMap<Table> = new NamedMap<Table>(false);
+    protected parsers: NamedMap<Parser> = new NamedMap<Parser>(true);
     public config: DatabaseConfig;
 
     constructor() {
@@ -19,49 +20,29 @@ export class Database {
     }
 
 
-    newTable(name: string) : Table {
-        
-        if(this.tables[name] != undefined) {
-            const exc: Exception = new Exception('table already exists');
-            exc.table(name);
-            exc.throw();
-        }
-
+    newTable(name: string): Table {
         const table: Table = new Table(this, name);
-        this.tables[name] = table;
+        this.tables.put(name, table);
         return table;
     }
 
 
     getTable(tableName: string) {
-        const table: Table = this.tables[tableName];
-
-        if(table == undefined) {
-            const exc: Exception = new Exception('table not found.');
-            exc.table(name);
-            exc.throw();
-        }
-        return table;
+        return this.tables.get(tableName);
     }
 
 
-    getParser(type: string) : Parser {
-        return this.parsers[type] ? this.parsers[type] : null;
+    getParser(type: string): Parser {
+        return this.parsers.get(type, false);
     }
 
 
     getParsersName() {
-        const names: string[] = [];
-
-        let name: string;
-        for(name in this.parsers) {
-            names.push(name);
-        }
-        return names;
+        return this.parsers.getAllProp('type');
     }
 
     addParser(type: string, parser: Parser): Database {
-        this.parsers[type] = parser;
+        this.parsers.put(type, parser);
         return this;
     }
 }
