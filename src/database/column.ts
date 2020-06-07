@@ -1,6 +1,8 @@
 import Value from './value';
 import Table from './table';
 import Parser from './value/parser';
+import DataRowCol from '../data/data-row-col';
+import DataRow from '../data/DataRow';
 
 
 export class Column {
@@ -24,6 +26,15 @@ export class Column {
 
     setPrimaryKey(isPrimary: boolean) {
         this.isPrimary = isPrimary;
+    }
+
+    getLastValue(): DataRowCol {
+        const lastDataRow: DataRow = this.table.getLastDataRow();
+
+        if (lastDataRow != undefined) {
+            return lastDataRow.getDataCol(this);
+        }
+        return undefined;
     }
 
 }

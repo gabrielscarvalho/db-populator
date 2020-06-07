@@ -4,7 +4,7 @@ import Id from './src/database/value/value-generator/id';
 import Code from './src/database/value/value-generator/code';
 import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
-
+import { DateBiggerThanLast, date } from './src/database/value/value-generator/date';
 
 const id = new Id();
 const code = new Code();
@@ -45,6 +45,7 @@ const order = db.newTable('t_order')
 
 const orderItem = db.newTable('t_order_item')
     .addColumn('id', 'int', id.getNext('t_order_item'))
+    .addColumn('freshierDate', 'date', DateBiggerThanLast(date('2010-03-05'), 5))
     .addColumn('order_id', 'int', order.getColumn('id'))
     .addColumn('order_code', 'string', order.getColumn('orderCode'))
     .addColumn('product_name', 'string', Random.fromList(['Iphone 11', 'Samsung VT 42', 'Notebook LG']))
@@ -70,8 +71,8 @@ queryBuilder.insert('t_order_item', {})
 
 queryBuilder.insert('t_order', { delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
 queryBuilder.insert('t_order_item', {})
-queryBuilder.insert('t_order_item', {})
-queryBuilder.insert('t_order_item', {})
+let item2: DataRow = queryBuilder.insert('t_order_item', {})
+queryBuilder.insert('t_order_item', {freshierDate: DateBiggerThanLast(item2.getData('freshierDate'), 30)})
 
 
 queryBuilder.print();

@@ -19,7 +19,7 @@ export class DataGenerator {
         this.table.getColumns().forEach(column => {            
             let val: any;
 
-            let previousVal : DataRowCol = this.getPreviousDataRowCol(dataRow, column);
+            let previousVal : DataRowCol = this.getPreviousDataRowCol(column);
 
             if (extraData[column.identifier]) {
                 val = new Value(extraData[column.identifier]).get(previousVal);
@@ -34,7 +34,7 @@ export class DataGenerator {
     }
 
 
-    protected getPreviousDataRowCol(dataRow: DataRow, column: Column): DataRowCol {
+    protected getPreviousDataRowCol(column: Column): DataRowCol {
         const previousDataRow = this.table.getLastDataRow();
         if(previousDataRow != undefined) {
             return previousDataRow.getDataCol(column);

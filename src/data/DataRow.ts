@@ -35,7 +35,10 @@ export class DataRow {
     }
 
     getDataCol(column: Column): DataRowCol {
-        return this.values[column.identifier];
+        if(this.values[column.identifier]) {
+            return this.values[column.identifier]
+        }
+        return undefined;
     }
 
     getData(columnIdentifier: string): any {

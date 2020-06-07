@@ -55,7 +55,8 @@ export class Table {
     }
 
     getLastDataRow(): DataRow {
-        return this.dataRow[this.dataRow.length - 1];
+        const dataRow: DataRow = this.dataRow[this.dataRow.length - 1];
+        return dataRow;
     }
 
     addColumn(identifier: string, type: string, valOrColumn: Column | any, columnName: string | undefined = undefined): Table {
