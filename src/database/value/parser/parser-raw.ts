@@ -6,6 +6,7 @@ export class ParserRaw implements Parser {
 
     type: string = 'raw';
     config: ParserConfig;
+    params: object = {};
 
     setConfig(config: ParserConfig): ParserRaw {
         this.config = config;
@@ -23,6 +24,11 @@ export class ParserRaw implements Parser {
 
     getNullString(): string {
         return this.config.NULL_TEXT;
+    }
+
+
+    setExtraParams(params :object = {}) {
+        this.params = params;
     }
 }
 

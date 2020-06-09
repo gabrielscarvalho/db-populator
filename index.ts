@@ -6,7 +6,7 @@ import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
 import { DateIncrement, date } from './src/database/value/value-generator/date';
 import DatabaseConfig from './src/database/config';
-import { ParserRaw } from './src/database/value/parser/parser-raw';
+import { ParserType } from './src/database/value/parser';
 
 const id = new Id({
     t_customer: 10,
@@ -62,7 +62,7 @@ const orderItem = db.newTable('t_order_item')
     .addColumn('qty', 'int', Random.number({ min: 1, max: 3 }))
     .addColumn('unit_price', 'float', Random.number({ min: 30, max: 50, decimals: 2 }))
     .addColumn('discount_price', 'float', Random.number({ min: 10, max: 15, decimals: 2 }))
-    .addColumn('total_price', 'float', Random.number({ min: 200, max: 500, decimals: 2 }))
+    .addColumn('total_price', ParserType.of('float', {decimals: 2}), Random.number({ min: 200, max: 500, decimals: 2 }))
     .addPrimaryKey('id');
 
 orderItem.afterGenerateData(data => {
@@ -70,7 +70,7 @@ orderItem.afterGenerateData(data => {
     const unitPrice: number =data.get('unit_price');
     const discountPrice: number = data.get('discount_price');
 
-    let totalPrice = ((qty * unitPrice) - discountPrice).toFixed(2);
+    let totalPrice = ((qty * unitPrice) - discountPrice);
     data.set('total_price', totalPrice);
 });
 

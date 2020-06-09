@@ -3,9 +3,10 @@ import Column, { NamedColumn } from './column';
 import DataRow from '../data/DataRow';
 import Value from './value';
 import Database from '../database';
-import Parser from './value/parser';
+import Parser, { ParserType, ConfiguredParser } from './value/parser';
 import Exception from '../exceptions/exception';
 import NamedMap from '../commons/named-map';
+import _ from "lodash";
 
 
 export class Table {
@@ -13,7 +14,7 @@ export class Table {
     public columns: NamedMap<Column> = new NamedMap<Column>(false);
     protected dataRow: DataRow[] = [];
 
-    protected fnAfterGenerateData: Function = data => (data) ;
+    protected fnAfterGenerateData: Function = data => (data);
 
     constructor(public database: Database, public name: string) {
 
@@ -54,7 +55,7 @@ export class Table {
         return dataRow;
     }
 
-    addColumn(identifier: string, type: string, valOrColumn: Column | any, columnName: string | undefined = undefined): Table {
+    addColumn(identifier: string, type: string | ParserType, valOrColumn: Column | any, columnName: string | undefined = undefined): Table {
 
         let val = valOrColumn;
 
@@ -79,7 +80,19 @@ export class Table {
             }
         }
 
-        const parser: Parser = this.database.getParser(type);
+
+        let parserType: ParserType = null;
+        if (type instanceof ParserType) {
+            parserType = type;
+        } else {
+            parserType = ParserType.of(type, {});
+        }
+
+        const parser: Parser = this.database.getParser(parserType.name);
+
+        const clonedParser = _.cloneDeep(parser);
+
+        clonedParser.setExtraParams(parserType.params);
 
         if (parser == null) {
             let exc: Exception = new Exception('Invalid column type', `could not find parser for specified type`);
@@ -89,7 +102,7 @@ export class Table {
             exc.throw();
         }
 
-        let col: Column = new Column(this, identifier, parser, new Value(val), columnName);
+        let col: Column = new Column(this, identifier, clonedParser, new Value(val), columnName);
         this.columns.put(identifier, col);
         return this;
     }
@@ -99,7 +112,7 @@ export class Table {
     }
 
 
-    public afterGenerateData(fn: Function): Table{
+    public afterGenerateData(fn: Function): Table {
         this.fnAfterGenerateData = fn;
         return this;
     }
