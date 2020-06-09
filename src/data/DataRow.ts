@@ -41,7 +41,7 @@ export class DataRow {
         return undefined;
     }
 
-    getData(columnIdentifier: string): any {
+    get(columnIdentifier: string): any {
         return this.data[columnIdentifier] ? this.data[columnIdentifier] : undefined;
     }
 

@@ -13,6 +13,7 @@ export class Table {
     public columns: NamedMap<Column> = new NamedMap<Column>(false);
     protected dataRow: DataRow[] = [];
 
+    protected fnAfterGenerateData: Function = data => (data) ;
 
     constructor(public database: Database, public name: string) {
 
@@ -44,6 +45,7 @@ export class Table {
 
 
     addDataRow(dataRow: DataRow) {
+        this.fnAfterGenerateData(dataRow);
         this.dataRow.push(dataRow);
     }
 
@@ -73,7 +75,7 @@ export class Table {
         if (valOrColumn instanceof Column) {
             val = () => {
                 const dataRow: DataRow = valOrColumn.table.getLastDataRow();
-                return dataRow.getData(valOrColumn.identifier);
+                return dataRow.get(valOrColumn.identifier);
             }
         }
 
@@ -95,6 +97,14 @@ export class Table {
     public getColumn(identifier: string, throwIfNotFound: boolean = true): Column {
         return this.columns.get(identifier, throwIfNotFound);
     }
+
+
+    public afterGenerateData(fn: Function): Table{
+        this.fnAfterGenerateData = fn;
+        return this;
+    }
+
+
 
 }
 

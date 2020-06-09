@@ -6,14 +6,19 @@ import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
 import { DateIncrement, date } from './src/database/value/value-generator/date';
 import DatabaseConfig from './src/database/config';
+import { ParserRaw } from './src/database/value/parser/parser-raw';
 
-const id = new Id();
+const id = new Id({
+    t_customer: 10,
+    t_order_item: 40
+});
 const code = new Code();
 
 
 const config: DatabaseConfig = new DatabaseConfig();
 
 const db: Database = new Database(config);
+
 
 
 const customer = db.newTable('t_customer')
@@ -53,14 +58,21 @@ const orderItem = db.newTable('t_order_item')
     .addColumn('order_id', 'int', order.getColumn('id'))
     .addColumn('order_code', 'string', order.getColumn('orderCode'))
     .addColumn('product_name', 'string', Random.fromList(['Iphone 11', 'Samsung VT 42', 'Notebook LG']))
-    .addColumn('total_price', 'float', Random.number({ min: 200, max: 500, decimals: 2 }))
-    .addColumn('discount_price', 'float', Random.number({ min: 10, max: 50, decimals: 2 }))
-    .addColumn('qty', 'int', Random.number({ min: 1, max: 3 }))
-    .addColumn('called_fn_date', 'raw', 'NOw()')
     .addColumn('created_at', 'datetime', Random.dateWithSpecific({ year: 1998, day: 15, month: 3, hour: 20, minute: 42, seconds: 23 }))
+    .addColumn('qty', 'int', Random.number({ min: 1, max: 3 }))
+    .addColumn('unit_price', 'float', Random.number({ min: 30, max: 50, decimals: 2 }))
+    .addColumn('discount_price', 'float', Random.number({ min: 10, max: 15, decimals: 2 }))
+    .addColumn('total_price', 'float', Random.number({ min: 200, max: 500, decimals: 2 }))
     .addPrimaryKey('id');
 
+orderItem.afterGenerateData(data => {
+    const qty: number = data.get('qty');
+    const unitPrice: number =data.get('unit_price');
+    const discountPrice: number = data.get('discount_price');
 
+    let totalPrice = ((qty * unitPrice) - discountPrice).toFixed(2);
+    data.set('total_price', totalPrice);
+});
 
 
 const queryBuilder: QueryBuilder = new QueryBuilder(db);
@@ -69,11 +81,11 @@ const queryBuilder: QueryBuilder = new QueryBuilder(db);
 queryBuilder.insert('t_customer')
 const address1: DataRow = queryBuilder.insert('t_address', { street: 'delivery address' });
 const address2: DataRow = queryBuilder.insert('t_address', { street: 'invoice address' });
-queryBuilder.insert('t_order', { delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
+queryBuilder.insert('t_order', { delivery_ad: address1.get('id'), invoice_ad: address2.get('id') });
 queryBuilder.insert('t_order_item', {})
 queryBuilder.insert('t_order_item', {})
 
-queryBuilder.insert('t_order', { delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
+queryBuilder.insert('t_order', { delivery_ad: address1.get('id'), invoice_ad: address2.get('id') });
 queryBuilder.insert('t_order_item', {})
 let item2: DataRow = queryBuilder.insert('t_order_item', {})
 queryBuilder.insert('t_order_item')
