@@ -3,10 +3,11 @@ import Column, { NamedColumn } from './column';
 import DataRow from '../data/DataRow';
 import Value from './value';
 import Database from '../database';
-import Parser, { ParserType, ConfiguredParser } from './value/parser';
+import Parser, { isParser } from './value/parser';
 import Exception from '../exceptions/exception';
 import NamedMap from '../commons/named-map';
 import _ from "lodash";
+import { ParserFloat } from './value/parser/parser-float';
 
 
 export class Table {
@@ -55,7 +56,7 @@ export class Table {
         return dataRow;
     }
 
-    addColumn(identifier: string, type: string | ParserType, valOrColumn: Column | any, columnName: string | undefined = undefined): Table {
+    addColumn(identifier: string, type: any | string , valOrColumn: Column | any, columnName: string | undefined = undefined): Table {
 
         let val = valOrColumn;
 
@@ -80,17 +81,15 @@ export class Table {
             }
         }
 
+        let parser: Parser = null;
 
-        let parserType: ParserType = null;
-        if (type instanceof ParserType) {
-            parserType = type;
+        if (isParser(type)) {
+            parser = type;
         } else {
-            parserType = ParserType.of(type, {});
+            parser = this.database.getParser(type);
         }
 
-        const parser: Parser = this.database.getParser(parserType.name);
-
-
+    
         if (parser == null) {
             let exc: Exception = new Exception('Invalid column type', `could not find parser for specified type`);
             exc.prop(this.name, identifier, 'type');

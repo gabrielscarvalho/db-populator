@@ -6,7 +6,6 @@ import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
 import { DateIncrement, date } from './src/database/value/value-generator/date';
 import {DatabaseConfig, parserConfig} from './src/database/config';
-import { ParserType } from './src/database/value/parser';
 import { ParserFloat } from './src/database/value/parser/parser-float';
 
 const id = new Id({
@@ -16,13 +15,14 @@ const id = new Id({
 const code = new Code();
 
 
-parserConfig.QUOTE_CHAR = "mudei";
+parserConfig.QUOTE_CHAR = "'";
 
 
 const config: DatabaseConfig = new DatabaseConfig();
 
 const db: Database = new Database(config);
 
+const ParserMoney = ParserFloat.withPrecision(2);
 
 
 const customer = db.newTable('t_customer')
@@ -64,9 +64,9 @@ const orderItem = db.newTable('t_order_item')
     .addColumn('product_name', 'string', Random.fromList(['Iphone 11', 'Samsung VT 42', 'Notebook LG']))
     .addColumn('created_at', 'datetime', Random.dateWithSpecific({ year: 1998, day: 15, month: 3, hour: 20, minute: 42, seconds: 23 }))
     .addColumn('qty', 'int', Random.number({ min: 1, max: 3 }))
-    .addColumn('unit_price', 'float', Random.number({ min: 30, max: 50, decimals: 2 }))
-    .addColumn('discount_price', 'float', Random.number({ min: 10, max: 15, decimals: 2 }))
-    .addColumn('total_price', 'float', Random.number({ min: 200, max: 500, decimals: 2 }))
+    .addColumn('unit_price', ParserMoney, Random.number({ min: 30, max: 50, decimals: 2 }))
+    .addColumn('discount_price', ParserMoney, Random.number({ min: 10, max: 15, decimals: 2 }))
+    .addColumn('total_price', ParserMoney, Random.number({ min: 200, max: 500, decimals: 2 }))
     .addPrimaryKey('id');
 
 orderItem.afterGenerateData(data => {
