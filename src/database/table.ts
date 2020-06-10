@@ -90,9 +90,6 @@ export class Table {
 
         const parser: Parser = this.database.getParser(parserType.name);
 
-        const clonedParser = _.cloneDeep(parser);
-
-        clonedParser.setExtraParams(parserType.params);
 
         if (parser == null) {
             let exc: Exception = new Exception('Invalid column type', `could not find parser for specified type`);
@@ -102,7 +99,7 @@ export class Table {
             exc.throw();
         }
 
-        let col: Column = new Column(this, identifier, clonedParser, new Value(val), columnName);
+        let col: Column = new Column(this, identifier, parser, new Value(val), columnName);
         this.columns.put(identifier, col);
         return this;
     }

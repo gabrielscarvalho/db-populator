@@ -1,14 +1,21 @@
 import Parser from "../parser";
-import {ParserRaw} from "./parser-raw";
 import moment from 'moment';
+import { parserConfig } from "../../config";
 
 
-export class ParserDatetime extends ParserRaw implements Parser {
+export class ParserDatetime implements Parser {
 
     type: string = 'datetime';
-    
+    format: string = 'YYYY-MM-DD HH:mm:ss';
+
+    static withFormat(format: string) : ParserDatetime {
+        const parser :ParserDatetime = new ParserDatetime();
+        parser.format = format;
+        return parser;
+    }
+
     parse(val: any): string {
-        return this.addQuotes(moment(val).format('YYYY-MM-DD HH:mm:ss'));
+        return parserConfig.addQuotes(moment(val).format(this.format));
     }
 }
 

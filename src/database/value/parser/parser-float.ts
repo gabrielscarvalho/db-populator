@@ -1,15 +1,21 @@
 import Parser from "../parser";
-import {ParserRaw} from "./parser-raw";
 
-
-export class ParserFloat extends ParserRaw implements Parser {
+export class ParserFloat implements Parser {
 
     type: string = 'float';
-    
-    parse(val: any): string {
+    precision: number = undefined;
 
-        if(this.params['decimals'] != undefined) {
-            return parseFloat(val).toFixed(this.params['decimals']);
+
+    static withPrecision(precision: number) : ParserFloat {
+        const parser :ParserFloat = new ParserFloat();
+        parser.precision = precision;
+        return parser;
+    }
+
+   
+    parse(val: any): string {
+        if(this.precision != undefined) {
+            return parseFloat(val).toFixed(this.precision);
         }
         return String(val);
     }

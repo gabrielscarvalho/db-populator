@@ -5,14 +5,18 @@ import Code from './src/database/value/value-generator/code';
 import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
 import { DateIncrement, date } from './src/database/value/value-generator/date';
-import DatabaseConfig from './src/database/config';
+import {DatabaseConfig, parserConfig} from './src/database/config';
 import { ParserType } from './src/database/value/parser';
+import { ParserFloat } from './src/database/value/parser/parser-float';
 
 const id = new Id({
     t_customer: 10,
     t_order_item: 40
 });
 const code = new Code();
+
+
+parserConfig.QUOTE_CHAR = "mudei";
 
 
 const config: DatabaseConfig = new DatabaseConfig();
@@ -62,7 +66,7 @@ const orderItem = db.newTable('t_order_item')
     .addColumn('qty', 'int', Random.number({ min: 1, max: 3 }))
     .addColumn('unit_price', 'float', Random.number({ min: 30, max: 50, decimals: 2 }))
     .addColumn('discount_price', 'float', Random.number({ min: 10, max: 15, decimals: 2 }))
-    .addColumn('total_price', ParserType.of('float', {decimals: 2}), Random.number({ min: 200, max: 500, decimals: 2 }))
+    .addColumn('total_price', 'float', Random.number({ min: 200, max: 500, decimals: 2 }))
     .addPrimaryKey('id');
 
 orderItem.afterGenerateData(data => {

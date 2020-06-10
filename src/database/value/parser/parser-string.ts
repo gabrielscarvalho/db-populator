@@ -1,17 +1,17 @@
 import Parser from "../parser";
-import {ParserRaw} from "./parser-raw";
+import { parserConfig } from "../../config";
 
 
-export class ParserString extends ParserRaw implements Parser {
+export class ParserString implements Parser {
 
     type: string = 'string';
 
 
     parse(val: any): string {
         if(val != null && val != undefined){ 
-            return this.addQuotes(String(val));
+            return parserConfig.addQuotes(String(val));
         }
-        return this.getNullString();
+        return parserConfig.getNullString();
     }
 }
 

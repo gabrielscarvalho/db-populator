@@ -1,8 +1,7 @@
 import Parser from "../parser";
-import {ParserRaw} from "./parser-raw";
 
 
-export class ParserInt extends ParserRaw implements Parser {
+export class ParserInt implements Parser {
 
     type: string = 'int';
     

@@ -11,9 +11,9 @@ export class Database {
     protected tables: NamedMap<Table> = new NamedMap<Table>(false);
     protected parsers: NamedMap<Parser> = new NamedMap<Parser>(true);
 
-    constructor(protected config: DatabaseConfig) {
+    constructor(public config: DatabaseConfig) {
         this.config = new DatabaseConfig();
-        this.parsers = DefaultParsers.get(this.config.parserConfig);
+        this.parsers = DefaultParsers.get();
     }
 
 
@@ -39,7 +39,7 @@ export class Database {
     }
 
     addParser(type: string, parser: Parser): Database {
-        this.parsers.put(type, parser.setConfig(this.config.parserConfig));
+        this.parsers.put(type, parser);
         return this;
     }
 }

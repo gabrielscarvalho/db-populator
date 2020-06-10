@@ -4,15 +4,7 @@ import DatabaseConfig, { ParserConfig } from "../config";
 
 export interface Parser {
     type: string;
-    config: ParserConfig;
-    params: object;
-
-
-    setConfig(config: ParserConfig): Parser;
     parse(val: any): string;
-    addQuotes(val: any): string;
-    getNullString(): string;
-    setExtraParams(params: object);
 }
 
 export default Parser;
