@@ -6,7 +6,7 @@ import Random from './src/database/value/value-generator/random';
 import DataRow from './src/data/DataRow';
 import { DateIncrement, date } from './src/database/value/value-generator/date';
 import {DatabaseConfig, parserConfig} from './src/database/config';
-import { ParserFloat } from './src/database/value/parser/parser-float';
+import { ParserFloat } from './parser';
 
 const id = new Id({
     t_customer: 10,
@@ -16,6 +16,8 @@ const code = new Code();
 
 
 parserConfig.QUOTE_CHAR = "'";
+
+
 
 
 const config: DatabaseConfig = new DatabaseConfig();

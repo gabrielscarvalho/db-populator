@@ -18,7 +18,6 @@ export class DataGenerator {
 
         this.table.getColumns().forEach(column => {            
             let val: any;
-
             let previousVal : DataRowCol = this.getPreviousDataRowCol(column);
 
             if (extraData[column.identifier]) {
@@ -26,6 +25,7 @@ export class DataGenerator {
             } else {
                 val = column.val.get(previousVal);
             }
+
             dataRow.addData(column, val);
         });
 

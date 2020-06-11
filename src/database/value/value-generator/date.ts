@@ -13,7 +13,7 @@ export const DateIncrement: Function = (initialDate: Date, amountOfDays: number)
         }
 
         if (moment(date).isValid()) {
-            return moment(date).add(amountOfDays, 'days').calendar();
+            return moment(date).add(amountOfDays, 'days').toDate();
         }
 
 
@@ -28,5 +28,5 @@ export const DateIncrement: Function = (initialDate: Date, amountOfDays: number)
 
 
 export const date = (date: string, parseFormat: string = "YYYY-MM-DD") => {
-    return moment(date, parseFormat);
+    return moment(date, parseFormat).toDate();
 }

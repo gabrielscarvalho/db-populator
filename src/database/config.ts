@@ -2,7 +2,7 @@
  * Config some properties of your database
 */
 
-export class ParserConfig {
+class ParserConfig {
 
     public QUOTE_CHAR: string = `'`;
     public NULL_TEXT: string = `null`;

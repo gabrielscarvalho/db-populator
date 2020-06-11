@@ -8,8 +8,8 @@ export class ParserDate implements Parser {
     type: string = 'date';
     format: string = 'YYYY-MM-DD';
 
-    static withFormat(format: string) : ParserDate {
-        const parser :ParserDate = new ParserDate();
+    static withFormat(format: string): ParserDate {
+        const parser: ParserDate = new ParserDate();
         parser.format = format;
         return parser;
     }

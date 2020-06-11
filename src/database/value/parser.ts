@@ -1,4 +1,3 @@
-import DatabaseConfig, { ParserConfig } from "../config";
 import _ from 'lodash';
 
 
