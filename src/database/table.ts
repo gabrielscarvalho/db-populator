@@ -1,6 +1,6 @@
 
 import Column, { NamedColumn } from './column';
-import DataRow from '../data/DataRow';
+import DataRow from '../data/data-row';
 import Value from './value';
 import Database from '../database';
 import Parser, { isParser } from './value/parser';

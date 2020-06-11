@@ -1,5 +1,5 @@
 import Column from "../database/column";
-import DataRow from "./DataRow";
+import DataRow from "./data-row";
 
 
 

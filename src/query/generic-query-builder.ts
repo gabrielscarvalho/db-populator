@@ -1,4 +1,4 @@
-import DataRow from "../data/DataRow";
+import DataRow from "../data/data-row";
 import QueryCommand from "./query-command";
 import IQueryBuilder from "./interface-query-builder";
 import { stringify } from "querystring";

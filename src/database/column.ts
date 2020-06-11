@@ -2,7 +2,7 @@ import Value from './value';
 import Table from './table';
 import Parser from './value/parser';
 import DataRowCol from '../data/data-row-col';
-import DataRow from '../data/DataRow';
+import DataRow from '../data/data-row';
 
 
 export class Column {

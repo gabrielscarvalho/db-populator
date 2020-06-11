@@ -1,5 +1,5 @@
 import Table from "../database/table";
-import DataRow from "./DataRow";
+import DataRow from "./data-row";
 import QueryCommand from "../query/query-command";
 import Column, { NamedColumn } from "../database/column";
 import { stringify } from "querystring";

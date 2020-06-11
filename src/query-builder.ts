@@ -1,5 +1,5 @@
 import Database from "./database";
-import DataRow from './data/DataRow';
+import DataRow from './data/data-row';
 import Table from "./database/table";
 import DataGenerator from "./data/data-generator";
 import QueryCommand from "./query/query-command";
