@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 const chance = new Chance();
 
-export class Random {
+class _Random {
 
 
 
@@ -191,4 +191,5 @@ export class Random {
 }
 
 
-export default new Random();
+export const Random = new _Random();
+export default new _Random();

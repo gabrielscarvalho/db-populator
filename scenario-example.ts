@@ -1,12 +1,8 @@
 import QueryBuilder from './src/query-builder';
-import Id from './src/database/value/value-generator/id';
-import Code from './src/database/value/value-generator/code';
-import Random from './src/database/value/value-generator/random';
-
-import { DateIncrement, date } from './src/database/value/value-generator/date';
 import {DatabaseConfig } from './src/database/config';
 
 
+import {Id, Code, Random, DateIncrement, date} from './data';
 import { ParserFloat, parserConfig } from './parser';
 import {Database, DataRow} from './db';
 
