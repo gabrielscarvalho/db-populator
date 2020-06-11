@@ -1,10 +1,7 @@
-import QueryBuilder from './src/query-builder';
-import {DatabaseConfig } from './src/database/config';
-
-
-import {Id, Code, Random, DateIncrement, date} from './data';
+import { QueryBuilder } from './query';
+import { Id, Code, Random, DateIncrement, date } from './data';
 import { ParserFloat, parserConfig } from './parser';
-import {Database, DataRow} from './db';
+import { Database, DataRow } from './db';
 
 const id = new Id({
     t_customer: 10,
@@ -16,11 +13,7 @@ const code = new Code();
 parserConfig.QUOTE_CHAR = "'";
 
 
-
-
-const config: DatabaseConfig = new DatabaseConfig();
-
-const db: Database = new Database(config);
+const db: Database = new Database();
 
 const ParserMoney = ParserFloat.withPrecision(2);
 
@@ -71,7 +64,7 @@ const orderItem = db.newTable('t_order_item')
 
 orderItem.afterGenerateData(data => {
     const qty: number = data.get('qty');
-    const unitPrice: number =data.get('unit_price');
+    const unitPrice: number = data.get('unit_price');
     const discountPrice: number = data.get('discount_price');
 
     let totalPrice = ((qty * unitPrice) - discountPrice);
