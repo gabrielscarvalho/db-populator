@@ -1,12 +1,14 @@
-import Database from './src/database';
 import QueryBuilder from './src/query-builder';
 import Id from './src/database/value/value-generator/id';
 import Code from './src/database/value/value-generator/code';
 import Random from './src/database/value/value-generator/random';
-import DataRow from './src/data/DataRow';
+
 import { DateIncrement, date } from './src/database/value/value-generator/date';
-import {DatabaseConfig, parserConfig} from './src/database/config';
-import { ParserFloat } from './parser';
+import {DatabaseConfig } from './src/database/config';
+
+
+import { ParserFloat, parserConfig } from './parser';
+import {Database, DataRow} from './db';
 
 const id = new Id({
     t_customer: 10,

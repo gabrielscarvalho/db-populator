@@ -7,7 +7,7 @@ import DataRow from "./DataRow";
  * Carries the column value
  * 
 */
-class DataRowCol {
+export class DataRowCol {
     public parsedVal: string;
     public hasData: boolean;
     constructor(public dataRow: DataRow,
