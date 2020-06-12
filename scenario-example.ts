@@ -1,7 +1,8 @@
 import { QueryBuilder } from './query';
 import { Id, Code, Random, DateIncrement, date } from './data';
-import { ParserFloat, parserConfig } from './parser';
+import { ParserFloat, parserConfig, ParserBuilder, Parser } from './parser';
 import { Database, DataRow } from './db';
+import { ParserDate } from './src/database/value/parser/parser-date';
 
 const id = new Id({
     t_customer: 10,
@@ -15,8 +16,19 @@ parserConfig.QUOTE_CHAR = "'";
 
 const db: Database = new Database();
 
+const MyParser: Parser = ParserBuilder('typex', (val, utils) => {
+    return utils.addQuotes('MODIFIQUEI'+ val);
+});
+
+const MyParser2: Parser = ParserBuilder('typex', (val, utils) => {
+    return utils.addQuotes('MODIFIQUEI'+ val);
+});
+
+
+
 const ParserMoney = ParserFloat.withPrecision(2);
 
+const ParserMyDate = ParserDate.withFormat('YYYY-DD-MM hh');
 
 const customer = db.newTable('t_customer')
     .addColumn('id', 'int', id.getNext('t_customer'), 'customer_id')
@@ -46,18 +58,18 @@ const order = db.newTable('t_order')
     .addColumn('invoice_ad', 'int', address.getColumn('id'), 'invoice_address_id')
     .addColumn('total_price', 'float', Random.number({ min: 200, max: 500, decimals: 2 }))
     .addColumn('creation_date', 'datetime', Random.date({ minYear: 2018, maxYear: 2022 }))
-    .addColumn('status', 'string', 'PROCESSING')
+    .addColumn('status', MyParser, 'PROCESSING')
     .addPrimaryKey('orderCode');
 
 const orderItem = db.newTable('t_order_item')
     .addColumn('id', 'int', id.getNext('t_order_item'))
-    .addColumn('freshierDate', 'date', DateIncrement(date('2010-03-05'), 5))
+    .addColumn('freshierDate', ParserMyDate, DateIncrement(date('2010-03-05'), 5))
     .addColumn('order_id', 'int', order.getColumn('id'))
     .addColumn('order_code', 'string', order.getColumn('orderCode'))
     .addColumn('product_name', 'string', Random.fromList(['Iphone 11', 'Samsung VT 42', 'Notebook LG']))
     .addColumn('created_at', 'datetime', Random.dateWithSpecific({ year: 1998, day: 15, month: 3, hour: 20, minute: 42, seconds: 23 }))
     .addColumn('qty', 'int', Random.number({ min: 1, max: 3 }))
-    .addColumn('unit_price', ParserMoney, Random.number({ min: 30, max: 50, decimals: 2 }))
+    .addColumn('unit_price', 'float', Random.number({ min: 30, max: 50, decimals: 5 }))
     .addColumn('discount_price', ParserMoney, Random.number({ min: 10, max: 15, decimals: 2 }))
     .addColumn('total_price', ParserMoney, Random.number({ min: 200, max: 500, decimals: 2 }))
     .addPrimaryKey('id');

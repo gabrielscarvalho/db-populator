@@ -36,8 +36,8 @@ export class Database {
         return this.parsers.getAllProp('type');
     }
 
-    addParser(type: string, parser: Parser): Database {
-        this.parsers.put(type, parser);
+    addParser(parser: Parser): Database {
+        this.parsers.put(parser.type, parser);
         return this;
     }
 }

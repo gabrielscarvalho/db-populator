@@ -7,4 +7,4 @@ export { ParserString } from './src/database/value/parser/parser-string';
 export { parserConfig } from './src/database/config';
 export { ParserFloat } from './src/database/value/parser/parser-float';
 export { ParserRaw } from './src/database/value/parser/parser-raw';
-export { isParser, Parser } from './src/database/value/parser';
+export { isParser, Parser, ParserBuilder } from './src/database/value/parser';
