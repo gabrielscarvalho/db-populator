@@ -2,8 +2,9 @@ import Table from '../database/table';
 import QueryCommand from '../query/query-command';
 import Column from '../database/column';
 import DataRowCol from './data-row-col';
+import Logger from '../commons/logger';
 
-
+const log = new Logger();
 export class DataRow {
 
     public data: Map<string, any> = new Map<string, any>();
@@ -25,6 +26,7 @@ export class DataRow {
 
 
     set(columnIdentifier: string, val: any) {
+        log.info(`Changing manually value of column: [${columnIdentifier}] to [${val}]`);
         this.data[columnIdentifier] = val;
         const dataRowCol: DataRowCol = this.values[columnIdentifier];
         dataRowCol.setValue(val);

@@ -3,6 +3,8 @@ import { Id, Code, Random, DateIncrement, date } from './data';
 import { ParserFloat, parserConfig, ParserBuilder, Parser } from './parser';
 import { Database, DataRow } from './db';
 import { ParserDate } from './src/database/value/parser/parser-date';
+//import {enableLogger } from './src/commons/logger';
+//enableLogger(true);
 
 const id = new Id({
     t_customer: 10,
@@ -10,8 +12,8 @@ const id = new Id({
 });
 const code = new Code();
 
-
 parserConfig.QUOTE_CHAR = "'";
+
 
 
 const db: Database = new Database();
@@ -19,11 +21,6 @@ const db: Database = new Database();
 const MyParser: Parser = ParserBuilder('typex', (val, utils) => {
     return utils.addQuotes('MODIFIQUEI'+ val);
 });
-
-const MyParser2: Parser = ParserBuilder('typex', (val, utils) => {
-    return utils.addQuotes('MODIFIQUEI'+ val);
-});
-
 
 
 const ParserMoney = ParserFloat.withPrecision(2);

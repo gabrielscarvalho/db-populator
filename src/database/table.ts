@@ -1,5 +1,5 @@
 
-import Column, { NamedColumn } from './column';
+import Column from './column';
 import DataRow from '../data/data-row';
 import Value from './value';
 import Database from '../database';
@@ -7,7 +7,9 @@ import Parser, { isParser } from './value/parser';
 import Exception from '../exceptions/exception';
 import NamedMap from '../commons/named-map';
 import _ from "lodash";
-import { ParserFloat } from './value/parser/parser-float';
+import Logger from '../commons/logger';
+
+const log = new Logger();
 
 
 export class Table {
@@ -58,6 +60,7 @@ export class Table {
 
     addColumn(identifier: string, type: any | string , valOrColumn: Column | any, columnName: string | undefined = undefined): Table {
 
+        log.info(`table: [${this.name}] adding column: [${identifier}]`)
         let val = valOrColumn;
 
         if (this.columns.has(identifier)) {
@@ -109,7 +112,10 @@ export class Table {
 
 
     public afterGenerateData(fn: Function): Table {
-        this.fnAfterGenerateData = fn;
+        this.fnAfterGenerateData =  (dataRow: DataRow) => {
+            log.info('Applying function afterGenerate data to apply new changes!');
+            fn(dataRow)
+        };
         return this;
     }
 

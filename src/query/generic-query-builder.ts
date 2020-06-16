@@ -1,9 +1,11 @@
 import DataRow from "../data/data-row";
 import QueryCommand from "./query-command";
 import IQueryBuilder from "./interface-query-builder";
-import { stringify } from "querystring";
 import DataRowCol from "../data/data-row-col";
+import Logger from "../commons/logger";
 
+
+const log = new Logger();
 
 
 export class GenericQueryBuilder implements IQueryBuilder {
@@ -15,12 +17,12 @@ export class GenericQueryBuilder implements IQueryBuilder {
 
     public toSQL(dataRows: DataRow[]): string[] {
         this.resetQueries();
+        log.group(`Printing queries. total:[${dataRows.length}]`);
 
         let dataRow: DataRow;
         dataRows.forEach(dataRow => {
 
             if (dataRow.command == QueryCommand.INSERT) {
-
                 this.sqls.push(this.insert(dataRow));
 
             } else if (dataRow.command == QueryCommand.DELETE) {
@@ -47,6 +49,7 @@ export class GenericQueryBuilder implements IQueryBuilder {
         }
 
         let SQL: string = `INSERT INTO ${dataRow.table.name} (${columns.join(',')}) VALUES (${values.join(',')});`;
+        log.info(`Added insert: [${SQL}]`);
         return SQL;
     }
 
@@ -71,6 +74,7 @@ export class GenericQueryBuilder implements IQueryBuilder {
         }
 
         let SQL: string = `DELETE FROM ${dataRow.table.name} WHERE ${where.join(' AND ')};`;
+        log.info(`Added delete: [${SQL}]`);
         return SQL;
     }
 
