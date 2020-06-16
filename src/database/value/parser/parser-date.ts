@@ -14,8 +14,15 @@ export class ParserDate implements Parser {
         return parser;
     }
 
-    parse(val: any): string {
-        return parserConfig.addQuotes(moment(val).format(this.format));
+
+    parse(val: any, addQuotes = true): string {
+
+        const dateString: string = moment(val).format(this.format);
+
+        if(addQuotes) {
+            return parserConfig.addQuotes(dateString);
+        }
+        return dateString;
     }
 }
 

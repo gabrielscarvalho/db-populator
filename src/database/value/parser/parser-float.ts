@@ -6,8 +6,9 @@ export class ParserFloat implements Parser {
     precision: number = undefined;
 
 
-    static withPrecision(precision: number) : ParserFloat {
+    static withPrecision(type: string, precision: number) : ParserFloat {
         const parser :ParserFloat = new ParserFloat();
+        parser.type = type;
         parser.precision = precision;
         return parser;
     }
