@@ -1,81 +1,70 @@
-import Database from './src/database';
-import QueryBuilder from './src/query-builder';
-import Id from './src/database/value/value-generator/id';
-import Code from './src/database/value/value-generator/code';
-import Random from './src/database/value/value-generator/random';
-import DataRow from './src/data/DataRow';
+import { Random } from './src/core/value-generator/random';
+import { AutoIncrement } from './src/core/value-generator/auto-increment';
+import { LastValue } from './src/core/value-generator/last-value';
+import { DateGen } from './src/core/value-generator/date';
+import { Fixed } from './src/core/value-generator/fixed';
+import { PostgresDatabase } from './src/impl/PostgresDatabase';
+import { iDataRow } from './src/interfaces';
+
+const database: PostgresDatabase = new PostgresDatabase();
+
+const autoIncrement = new AutoIncrement();
+
+autoIncrement
+  .initialId('user.id', 1)
+  .initialId('address.id', 2)
+  .initialId('order.id', 200);
 
 
-const id = new Id();
-const code = new Code();
-
-const db: Database = new Database();
-
-
-const customer = db.newTable('t_customer')
-    .addColumn('id', 'int', id.getNext('t_customer'))
-    .addColumn('name', 'string', Random.name())
-    .addColumn('surname', 'string', Random.lastName())
-    .addColumn('email', 'string', Random.email())
-    .addColumn('birthDate', 'date', Random.date({ minYear: 1970, maxYear: 2010 }))
-    .addColumn('creation_date', 'datetime', Random.date({ minYear: 2018, maxYear: 2022 }))
-    .addPrimaryKey('id');
-
-const address = db.newTable('t_address')
-    .addColumn('id', 'int', id.getNext('t_address'))
-    .addColumnReference('customer_id', 'int', customer.getColumn('id'))
-    .addColumn('street', 'string', Random.fromList(['St. Abc', 'St. Cde']))
-    .addColumn('number', 'int', Random.number({ min: 1, max: 150 }))
-    .addColumn('country', 'string', Random.fromList(['Brazil', 'United States']))
-    .addColumn('creation_date', 'datetime', Random.date({ minYear: 2018, maxYear: 2022 }))
-    .addColumn('is_main_address', 'bool', Random.fromList([true, false]))
-    .addPrimaryKey('id');;
-
-const order = db.newTable('t_order')
-    .addColumn('id', 'int', id.getNext('t_order'))
-    .addColumn('orderCode', 'string', code.getNext('orderCode-'))
-    .addColumnReference('customer_id', 'int', customer.getColumn('id'))
-    .addColumnReference('delivery_ad', 'int', address.getColumn('id'), 'delivery_address_id')
-    .addColumnReference('invoice_ad', 'int', address.getColumn('id'), 'invoice_address_id')
-    .addColumn('total_price', 'float', Random.number({ min: 200, max: 500, decimals: 2 }))
-    .addColumn('creation_date', 'datetime', Random.date({ minYear: 2018, maxYear: 2022 }))
-    .addColumn('status', 'string', 'PROCESSING')
-    .addPrimaryKey('orderCode');
-
-const orderItem = db.newTable('t_order_item')
-    .addColumn('id', 'int', id.getNext('t_order_item'))
-    .addColumnReference('order_id', 'int', order.getColumn('id'))
-    .addColumnReference('order_code', 'string', order.getColumn('orderCode'))
-    .addColumn('product_name', 'string', Random.fromList(['Iphone 11', 'Samsung VT 42', 'Notebook LG']))
-    .addColumn('total_price', 'float', Random.number({ min: 200, max: 500, decimals: 2 }))
-    .addColumn('discount_price', 'float', Random.number({ min: 10, max: 50, decimals: 2 }))
-    .addColumn('qty', 'int', Random.number({ min: 1, max: 3 }))
-    .addColumn('called_fn_date', 'raw', 'NOw()')
-    .addColumn('created_at', 'datetime', Random.dateWithSpecific({ year: 1998, day: 15, month: 3, hour: 20, minute: 42, seconds: 23 }))
-    .addPrimaryKey('id');
+const tUser = database.addTable('user')
+  .addColumn('id', 'int', autoIncrement.valueGen('user.id'))
+  .addColumn('name', 'string', Random.Name())
+  .addColumn('lastname', 'string', Random.LastName())
+  .addColumn('email', 'string', Random.Email())
+  .addColumn('age', 'int', Random.Number(18, 30))
+  .addColumn('created_at', 'date', DateGen.between({ year: { min: 2010, max: 2015 }}))
+  .addColumn('telephone', 'string', Fixed('55 098915651'));
 
 
+const tAddress = database.addTable('address')
+  .addColumn('id', 'int', autoIncrement.valueGen('address.id'))
+  .addColumn('user_id', 'int', LastValue(tUser.getColumn('id')))
+  .addColumn('receiver', 'string', Random.Name());
 
 
-const queryBuilder: QueryBuilder = new QueryBuilder(db);
+const tOrder = database.addTable('order')
+  .addColumn('id', 'int', autoIncrement.valueGen('order.id'))
+  .addColumn('user_id', 'int', LastValue(tUser.getColumn('id')))
+  .addColumn('user_email', 'string', LastValue(tUser.getColumn('email')))
+  .addColumn('delivery_address_id', 'int', LastValue(tAddress.getColumn('id')))
+  .addColumn('total_price', 'number', Random.Number(100, 900))
+  .addColumn('freight_price', 'number', Random.Number(10, 50))
+  .addColumn('item_price', 'number', Random.Number(90, 160))
+  .addColumn('discount_price', 'number', Random.Number(10, 30))
+  .afterGenerateData((dataRow: iDataRow) => {
+
+    const freight = dataRow.getRawValue('freight_price');
+    const items = dataRow.getRawValue('item_price');
+    const discount = dataRow.getRawValue('discount_price');
+
+    dataRow.setRawValue('total_price', (items + freight - discount));
+    
+    return dataRow;
+  });
+
+const user = database.insert('user', { name: 'John'});
+
+const address = database.insert('address', {});
+
+const order1 = database.insert('order', {});
+const order2 = database.insert('order', {});
+const order3 = database.insert('order', {});
 
 
-queryBuilder.insert('t_customer')
-const address1 : DataRow = queryBuilder.insert('t_address', { street: 'delivery address' });
-const address2 : DataRow = queryBuilder.insert('t_address', { street: 'invoice address' });
-queryBuilder.insert('t_order', {orderCode: 'ESSE AQUI MESMO',   delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
-queryBuilder.insert('t_order_item', {})
-queryBuilder.insert('t_order_item', {})
+const user2 = database.insert('user', { name: 'John'});
+const address2 = database.insert('address', {});
 
-queryBuilder.insert('t_order', { delivery_ad: address1.getData('id'), invoice_ad: address2.getData('id') });
-queryBuilder.insert('t_order_item', {})
-queryBuilder.insert('t_order_item', {})
-queryBuilder.insert('t_order_item', {})
+console.log(database.toSQL());
 
-
-queryBuilder.print();
-
-
-queryBuilder.purge();
-//result.data.id = 3;
+console.log('hellow');
 
