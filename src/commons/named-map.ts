@@ -5,7 +5,6 @@ class NamedMap<T> {
     protected data: Map<string, T> = new Map<string, T>();
 
     constructor(public allowReplace: boolean = true) {
-
     }
 
     put(key: string, val: T) {

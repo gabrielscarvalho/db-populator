@@ -3,9 +3,11 @@
         "outDir": "./built",
         "allowJs": true,
         "target": "es5",
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "inlineSourceMap": true,
     },
     "include": [
         "./src/**/*"
-    ]
+    ] 
 }

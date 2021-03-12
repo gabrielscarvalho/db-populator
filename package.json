@@ -4,25 +4,36 @@
   "description": "",
   "main": "generator.js",
   "scripts": {
-    "test": "jest"
+    "sql": "ts-node",
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watchAll=false"
   },
   "keywords": [
     "data"
   ],
+  "jest": {
+    "collectCoverageFrom": [
+      "./src/**/*.ts"
+    ]
+  },
   "author": "gabriel santos carvalho",
   "license": "ISC",
   "dependencies": {
-    "@types/jest": "^26.0.0",
     "@types/lodash": "^4.14.155",
     "@types/node": "^14.0.11",
     "chance": "^1.1.6",
     "colors": "^1.4.0",
     "lodash": "^4.17.15",
-    "moment": "^2.26.0",
-    "typescript": "^3.9.5"
+    "moment": "^2.26.0"
   },
   "devDependencies": {
-    "jest": "^26.0.1",
-    "ts-node": "^8.10.2"
+    "@types/jest": "^26.0.15",
+    "jest": "^26.6.1",
+    "ts-jest": "^26.4.3",
+    "ts-loader": "^7.0.5",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
   }
 }

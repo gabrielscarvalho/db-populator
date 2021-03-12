@@ -8,6 +8,10 @@ import Logger from './commons/logger';
 const log = new Logger();
 
 
+/**
+ * Represents a whole database.
+ * 
+*/
 export class Database {
 
     protected tables: NamedMap<Table> = new NamedMap<Table>(false);
@@ -18,7 +22,11 @@ export class Database {
         this.parsers = DefaultParsers.get();
     }
 
-
+    /**
+     * Creates a new table.
+     * @param name: table name
+     * @return Table
+    */
     newTable(name: string): Table { 
         log.group(`Adding new table: [${name}]`);
         const table: Table = new Table(this, name);
@@ -27,11 +35,19 @@ export class Database {
     }
 
 
+    /**
+     * Returns the asked table
+     * @param tableName 
+     */
     getTable(tableName: string) {
         return this.tables.get(tableName);
     }
 
 
+    /**
+     * Returns a parser.
+     * @param type
+     */
     getParser(type: string): Parser {
         return this.parsers.get(type, false);
     }
